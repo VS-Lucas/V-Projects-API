@@ -14,13 +14,25 @@ model User {
   name                String?
   password            String
   role                String    @default("COLABORADOR")
-  address             String? 
+  address             Address?  @relation
   position            String?  
   SelfAssessments     SelfAssessment[]
   PeerReviewsGiven    PeerReview[] @relation("PeerReviewsGiven")
   PeerReviewsReceived PeerReview[] @relation("PeerReviewsReceived")
   EqualizationsGiven  Equalization[] @relation("EqualizationsGiven")
   EqualizationsReceived Equalization[] @relation("EqualizationsReceived")
+}
+
+model Address {
+  id       Int    @default(autoincrement()) @id
+  street   String
+  district String
+  city     String
+  state    String
+  country  String
+  number   String
+  userId   Int    @unique
+  user     User   @relation(fields: [userId], references: [id])
 }
 
 model Criterion {
