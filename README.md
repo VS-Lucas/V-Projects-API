@@ -40,6 +40,7 @@ Before starting the project, set up the environment variables. Create a `.env` f
 ```env
 DATABASE_URL="file:./dev.db"
 JWT_SECRET="<your_jwt_secret>"
+SERVER_PORT="3000"
 ```
 
 ## Populating the Database
