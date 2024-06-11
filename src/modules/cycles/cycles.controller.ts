@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Param, Delete, HttpException, HttpStatus }
 import { CyclesService } from './cycles.service';
 import { CreateCycleDto } from './dto/create.cycle.dto';
 import { CreatedCycleDto } from './dto/created.cycle.dto';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('cycles')
+@Controller('api/cycles')
+@ApiTags('Cycle')
 export class CyclesController {
   constructor(private readonly cyclesService: CyclesService) {}
 
