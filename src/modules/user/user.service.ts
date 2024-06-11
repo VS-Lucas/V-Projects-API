@@ -33,4 +33,32 @@ export class UserService {
       role: user.role
     };
   }
+
+  async getUser(id: number): Promise<CreatedUserDto> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id
+      }
+    });
+
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
+
+    return {
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+  }
+
+  async getAllUsers(): Promise<CreatedUserDto[]> {
+    const users = await this.prisma.user.findMany();
+
+    return users.map(user => ({
+      name: user.name,
+      email: user.email,
+      role: user.role
+    }));
+  }
 }
