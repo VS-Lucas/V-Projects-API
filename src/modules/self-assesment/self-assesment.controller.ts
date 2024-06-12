@@ -21,20 +21,20 @@ export class SelfAssesmentController {
     return this.selfAssesmentService.create(createSelfAssesmentDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.selfAssesmentService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.selfAssesmentService.findAll();
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.selfAssesmentService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.selfAssesmentService.findOne(+id);
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateSelfAssesmentDto: UpdateSelfAssesmentDto) {
-  //   return this.selfAssesmentService.update(+id, updateSelfAssesmentDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateSelfAssesmentDto: UpdateSelfAssesmentDto) {
+    return this.selfAssesmentService.update(+id, updateSelfAssesmentDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
