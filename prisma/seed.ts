@@ -6,10 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
   // Hash passwords
   const hashedPassword1 = await bcrypt.hash('securepassword1', 10);
-  const hashedPassword2 = await bcrypt.hash('securepassword1', 10);
-  const hashedPassword3 = await bcrypt.hash('securepassword1', 10);
-  const hashedPassword4 = await bcrypt.hash('securepassword1', 10);
-  const hashedPasswordAdmin = await bcrypt.hash('securepassword2', 10);
+  const hashedPassword2 = await bcrypt.hash('securepassword2', 10);
+  const hashedPassword3 = await bcrypt.hash('securepassword3', 10);
+  const hashedPassword4 = await bcrypt.hash('securepassword4', 10);
+  const hashedPassword5 = await bcrypt.hash('securepassword5', 10);
+  const hashedPasswordAdmin = await bcrypt.hash('securepasswordAdmin', 10);
 
   // Seed for Users
   const usersData = [
@@ -70,6 +71,23 @@ async function main() {
       password: hashedPassword4,
       role: 'COLABORADOR',
       position: 'QA Engineer',
+      address: {
+        create: {
+          street: '1011 Last St',
+          district: 'Downtown',
+          city: 'Cityville',
+          state: 'Stateville',
+          country: 'Countryland',
+          number: '4',
+        },
+      },
+    },
+    {
+      email: 'lucas@example.com',
+      name: 'Lucas',
+      password: hashedPassword5,
+      role: 'COLABORADOR',
+      position: 'Student',
       address: {
         create: {
           street: '1011 Last St',
