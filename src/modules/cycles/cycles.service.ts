@@ -68,7 +68,13 @@ export class CyclesService {
 
   async getAllCycles() {
     try {
-      return await this.prisma.cycle.findMany();
+      const cycles = await this.prisma.cycle.findMany();
+
+      const currentDate = new Date();
+      return cycles.map(cycle => ({
+        ...cycle,
+        status: currentDate <= new Date(cycle.endDate),
+      }));
     } catch (error) {
       throw new NotFoundException(`Cycle not found`);
     }

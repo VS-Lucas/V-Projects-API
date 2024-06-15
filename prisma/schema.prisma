@@ -69,6 +69,7 @@ model Cycle {
   name             String
   startDate        DateTime
   endDate          DateTime
+  status           Boolean   @default(true)
   SelfAssessments  SelfAssessment[]
   PeerReviews      PeerReview[]
   Equalizations    Equalization[]
