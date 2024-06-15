@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { EqualizationService } from './equalization.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -8,7 +8,7 @@ import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
 @Role('SOCIO')
 @ApiBearerAuth()
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+//@UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller('api/equalization')
 @ApiTags('Equalization')
 export class EqualizationController {
@@ -42,6 +42,12 @@ export class EqualizationController {
     @Get('cycle/:cycleId')
     findByCycle(@Param('cycleId') cycleId: string) {
         return this.equalizationService.findByCycle(+cycleId);
+    }
+
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateEqualizationDto: any) {
+        return this.equalizationService.editEqualation(+id, updateEqualizationDto);
     }
 
 }

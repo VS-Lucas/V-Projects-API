@@ -2,6 +2,7 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { EqualizationDto } from './dto/equalization.dto';
+import { UpdateEqualizationDto } from './dto/update-equalization.dto';
 
 @Injectable()
 export class EqualizationService {
@@ -23,7 +24,7 @@ export class EqualizationService {
     const equalization = await this.prisma.equalization.create({
       data: {
         ...createEqualizationDto,
-        date: new Date(createEqualizationDto.date), // Converting string to Date
+        date: new Date(createEqualizationDto.date),
       },
     });
 
@@ -111,5 +112,24 @@ export class EqualizationService {
         date: equalization.date,
         finalGrade: equalization.finalGrade,
         }));
+    }
+
+    async editEqualation(id: number, updateEqualizationDto: UpdateEqualizationDto): Promise<EqualizationDto> {
+        const equalization = await this.prisma.equalization.update({
+            where: { id },
+            data: {
+                ...updateEqualizationDto,
+                date: new Date(updateEqualizationDto.date),
+            },
+        });
+
+        return {
+            id: equalization.id,
+            evaluatorId: equalization.evaluatorId,
+            evaluatedId: equalization.evaluatedId,
+            cycleId: equalization.cycleId,
+            date: equalization.date,
+            finalGrade: equalization.finalGrade,
+        };
     }
 }
