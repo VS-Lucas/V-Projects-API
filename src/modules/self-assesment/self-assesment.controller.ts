@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, UseGuards } from '@nestjs/common';
 import { SelfAssesmentService } from './self-assesment.service';
 import { CreateSelfAssesmentDto } from './dto/create-self-assesment.dto';
 import { UpdateSelfAssesmentDto } from './dto/update-self-assesment.dto';
