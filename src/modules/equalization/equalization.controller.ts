@@ -8,7 +8,7 @@ import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
 @Role('SOCIO')
 @ApiBearerAuth()
-//@UseGuards(AuthenticationGuard, AuthorizationGuard)
+@UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller('api/equalization')
 @ApiTags('Equalization')
 export class EqualizationController {
