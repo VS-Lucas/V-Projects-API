@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { PeerReviewService } from './peer-review.service';
-import { CreatePeerReviewDto } from './dto/create-peer-review.dto';
+import { RegisterPeerReviewDto } from './dto/create-peer-review.dto';
 
 @Controller('peer-review')
 export class PeerReviewController {
@@ -23,12 +23,11 @@ export class PeerReviewController {
 
     };
 
-    @Put('register/:id')
+    @Put('register')
     async registerPeerReview(
-      @Param('id') idPeekReview: number,
-      @Body() registerPeerReview: CreatePeerReviewDto[],
+      @Body() registerPeerReview: RegisterPeerReviewDto[],
     ) {
-      return this.peerReviewService.registerPeerReview(idPeekReview, registerPeerReview);
+      return this.peerReviewService.registerPeerReview(registerPeerReview);
     }
   }
 

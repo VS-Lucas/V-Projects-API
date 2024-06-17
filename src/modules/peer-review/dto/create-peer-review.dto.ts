@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { PeerReviewScoreDto } from "./peer-review-score.dto";
 
-export class CreatePeerReviewDto {
+export class RegisterPeerReviewDto {
 
     @ApiProperty()
     @IsNotEmpty()
