@@ -32,80 +32,138 @@ export class PeerReviewService {
 
     };
 
-    async createPeerReview(createPeerReview: CreatePeerReviewDto[]) {
+    async registerPeerReview(idPeekReview: number, registerPeerReview: CreatePeerReviewDto[]) {
 
-        for (const review of createPeerReview) {
+        for (const review of registerPeerReview) {
 
-            await this.prisma.peerReview.create({
+            const reviewExist = this.reviewExist(idPeekReview);
 
-                data: {
-    
-                    evaluator: {
-    
-                        connect: {
-    
-                            id: review.evaluatorId
-    
-                        }
-    
-                    },
-    
-                    evaluated: {
-    
-                        connect: {
-    
-                            id: review.evaluatedId
-    
-                        }
-    
-                    },
-    
-                    cycle: {
-    
-                        connect: {
-    
-                            id: review.cycleId
-    
-                        }
-    
-                    }, 
-    
-                    meanGrade: (review.assessment.behavior + review.assessment.tecniques)/2
-    
-                }
-    
-            })
+            if (!reviewExist) {
 
-            await this.prisma.peerReviewScore.create({
+                this.createPeerReview(review)
 
-                data: {
+            }else {
 
-                    assessment: {
+                this.updatePeerReview((await reviewExist).id, (await reviewExist).PeerReviewScores.id, review)
 
-                        connect: {
-
-                            id: review.assessment.idReview
-
-                        }
-
-                    }, 
-
-                    behavior: review.assessment.behavior,
-
-                    tecniques: review.assessment.tecniques, 
-
-                    toImprove: review.assessment.toImprove,
-                    
-                    toPraise: review.assessment.toPraise
-
-                }
-
-            })
+            }
 
         }
 
 
     };
+
+    async createPeerReview(createPeerReview: CreatePeerReviewDto) {
+
+        await this.prisma.peerReview.create({
+
+            data: {
+
+                evaluator: {
+
+                    connect: {
+
+                        id: createPeerReview.evaluatorId
+
+                    }
+
+                },
+
+                evaluated: {
+
+                    connect: {
+
+                        id: createPeerReview.evaluatedId
+
+                    }
+
+                },
+
+                cycle: {
+
+                    connect: {
+
+                        id: createPeerReview.cycleId
+
+                    }
+
+                }, 
+
+                meanGrade: (createPeerReview.assessment.behavior + createPeerReview.assessment.tecniques)/2
+
+            }
+
+        })
+
+        await this.prisma.peerReviewScore.create({
+
+            data: {
+
+                assessment: {
+
+                    connect: {
+
+                        id: createPeerReview.assessment.idReview
+
+                    }
+
+                }, 
+
+                behavior: createPeerReview.assessment.behavior,
+
+                tecniques: createPeerReview.assessment.tecniques, 
+
+                toImprove: createPeerReview.assessment.toImprove,
+                
+                toPraise: createPeerReview.assessment.toPraise
+
+            }
+
+        })
+
+    };
+
+    async updatePeerReview(idPeerReview: number, idScore: number, createPeerReview: CreatePeerReviewDto) {
+
+        await this.prisma.selfAssessment.update({
+
+            where: {
+
+                id: idPeerReview
+
+            }, 
+
+            data: {
+
+                meanGrade: (createPeerReview.assessment.behavior + createPeerReview.assessment.tecniques) / 2
+
+            }
+
+        })
+
+        await this.prisma.peerReviewScore.update({
+
+            where: {
+
+                id: idScore
+
+            }, 
+
+            data: {
+
+                behavior: createPeerReview.assessment.behavior,
+    
+                tecniques: createPeerReview.assessment.tecniques, 
+
+                toImprove: createPeerReview.assessment.toImprove,
+                
+                toPraise: createPeerReview.assessment.toPraise
+
+            }
+
+        })
+
+    }
 
     async getPeerReviews(evaluatorId: number, cycleId: number) {
 
@@ -129,24 +187,24 @@ export class PeerReviewService {
 
     }
 
-    async findReview(evaluatedID: number, cycleId: number) {
+    async reviewExist(id: number) {
 
-        const review = await this.prisma.peerReview.findFirst({
+        const review = await this.prisma.peerReview.findUnique({
 
-            where : {
+            where: {
 
-                evaluatedId: evaluatedID, 
-                cycleId: cycleId
+                id: id
+
+            }, 
+            include: {
+
+                PeerReviewScores: true 
 
             }
 
         })
 
-        if (review) {
-            return true 
-        }else {
-            return false
-        }
+        return review; 
 
     }
 
