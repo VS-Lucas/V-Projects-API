@@ -3,6 +3,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create.user.dto';
 import { CreatedUserDto } from './dto/created.user.dto';
+import { Collaborator } from './dto/collaborator.dto';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,7 @@ export class UserService {
     const existingUser= await this.prisma.user.findUnique({
       where: {
         email: createUserDto.email
-      }
+      },
     })
 
     if (existingUser) {
@@ -30,7 +31,7 @@ export class UserService {
     return {
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
     };
   }
 
@@ -55,10 +56,33 @@ export class UserService {
   async getAllUsers(): Promise<CreatedUserDto[]> {
     const users = await this.prisma.user.findMany();
 
+    if (!users) {
+      throw new ConflictException('No users found');
+    }
+
     return users.map(user => ({
       name: user.name,
       email: user.email,
       role: user.role
+    }));
+  }
+
+  async getAllColabs(): Promise<Collaborator[]> {
+    const collaborators = await this.prisma.user.findMany({
+      where: {
+        role: "COLABORADOR"
+      }
+    });
+
+    if (!collaborators) {
+      throw new ConflictException('No collaborators found');
+    }
+
+    return collaborators.map(collaborator => ({
+      id: collaborator.id,
+      name: collaborator.name,
+      email: collaborator.email,
+      role: collaborator.role
     }));
   }
 }
