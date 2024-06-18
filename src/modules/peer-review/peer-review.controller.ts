@@ -10,16 +10,16 @@ export class PeerReviewController {
     @Get('collaborators/:id')
     async getAllCollaborators(@Param('id') id: number) {
 
-        return this.peerReviewService.getAllCollaborator(id);
+        return this.peerReviewService.getAllCollaborator(+id);
 
     };
 
     @Get(':idReview/:idCycle')
     async getAllPeerReviews(
-        @Param('idReview') idReview: number, 
+        @Param('idReview') idEvaluator: number, 
         @Param('idCycle') idCycle: number,) {
 
-        return this.peerReviewService.getPeerReviews(idReview, idCycle); 
+        return this.peerReviewService.getPeerReviews(+idEvaluator, +idCycle); 
 
     };
 
