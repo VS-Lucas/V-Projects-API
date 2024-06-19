@@ -68,7 +68,13 @@ export class CyclesService {
 
   async getAllCycles() {
     try {
-      return await this.prisma.cycle.findMany();
+      return await this.prisma.cycle.findMany({
+        include: {
+          SelfAssessments: true,
+          PeerReviews: true,
+          Equalizations: true,
+        },
+      });
     } catch (error) {
       throw new NotFoundException(`Cycle not found`);
     }
