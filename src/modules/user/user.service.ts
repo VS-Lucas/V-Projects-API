@@ -82,7 +82,8 @@ export class UserService {
       id: collaborator.id,
       name: collaborator.name,
       email: collaborator.email,
-      role: collaborator.role
+      role: collaborator.role,
+      position: collaborator.position
     }));
   }
 }

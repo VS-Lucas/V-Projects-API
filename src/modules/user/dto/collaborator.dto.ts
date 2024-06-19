@@ -12,4 +12,7 @@ export class Collaborator {
 
     @ApiProperty()
     role: string;
+
+    @ApiProperty()
+    position: string;
 }
