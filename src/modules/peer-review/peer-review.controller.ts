@@ -14,20 +14,22 @@ export class PeerReviewController {
 
     };
 
-    @Get(':idReview/:idCycle')
+    @Get(':idEvaluator/:idCycle')
     async getAllPeerReviews(
-        @Param('idReview') idEvaluator: number, 
-        @Param('idCycle') idCycle: number,) {
+        @Param('idEvaluator') idEvaluator: number, 
+        @Param('idCycle') idCycle: number) {
 
-        return this.peerReviewService.getPeerReviews(+idEvaluator, +idCycle); 
+        return this.peerReviewService.getPeerReviewsByCycle(+idEvaluator, +idCycle); 
 
     };
 
-    @Put('register')
+    @Put('register/:idEvaluator/:idCycle')
     async registerPeerReview(
+      @Param('idEvaluator') idEvaluator: number, 
+      @Param('idCycle') idCycle: number,
       @Body() registerPeerReview: RegisterPeerReviewDto[],
     ) {
-      return this.peerReviewService.registerPeerReview(registerPeerReview);
+      return this.peerReviewService.registerPeerReview(registerPeerReview, +idEvaluator, +idCycle);
     }
   }
 

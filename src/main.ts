@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const port = process.env.SERVER_PORT
-  await app.listen(port);
+  await app.listen(port || 3000);
 
   console.info(`Server is running on port ${port}`)
 }

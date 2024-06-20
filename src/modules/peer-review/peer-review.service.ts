@@ -25,7 +25,22 @@ export class PeerReviewService {
         return collaborators;
     }
 
-    async registerPeerReview(registerPeerReview: RegisterPeerReviewDto[]) {
+    async registerPeerReview(registerPeerReview: RegisterPeerReviewDto[], evaluatorId: number, cycle: number) {
+
+        const missingReviews = await this.verify(evaluatorId,  cycle, registerPeerReview) 
+
+        console.log("Registros")
+        console.log(registerPeerReview)
+
+        console.log("reviews sobrando")
+        console.log(missingReviews)
+
+        missingReviews.forEach((missingReview) => {
+
+            this.deletePeerReview(missingReview.id, missingReview.PeerReviewScores.id)
+
+        })
+
         for (const review of registerPeerReview) {
             const evaluatorExists = await this.prisma.user.findUnique({
                 where: { id: review.evaluatorId },
@@ -52,7 +67,7 @@ export class PeerReviewService {
             }
 
             const existingReview = await this.reviewExist(review.evaluatorId, review.evaluatedId, review.cycleId);
-            console.log(existingReview);
+            // console.log(existingReview);
 
             if (!existingReview) {
                 await this.createPeerReview(review);
@@ -171,7 +186,7 @@ export class PeerReviewService {
         }
     }
 
-    async getPeerReviews(evaluatorId: number, cycleId: number) {
+    async getPeerReviewsByCycle(evaluatorId: number, cycleId: number) {
         const reviews = await this.prisma.peerReview.findMany({
             where: {
                 evaluatorId: evaluatorId,
@@ -197,4 +212,45 @@ export class PeerReviewService {
         });
         return review;
     }
+
+    async deletePeerReview(idPeerReview: number, idScore: number) {
+
+        await this.prisma.peerReviewScore.delete({
+
+            where: {
+                id: idScore
+            }
+
+        })
+
+        await this.prisma.peerReview.delete({
+
+            where: {
+
+                id: idPeerReview 
+
+            }
+
+        })
+
+    }
+
+    async verify(evaluatorId: number, cycleId: number, registerPeerReviewList: RegisterPeerReviewDto[]) {
+        const actualReviews = await this.getPeerReviewsByCycle(evaluatorId, cycleId);
+
+        console.log(actualReviews)
+    
+        const missingReviews = actualReviews.filter(record => {
+            const foundReview = registerPeerReviewList.find(review => 
+                record.evaluatedId === review.evaluatedId && record.evaluatorId === review.evaluatorId
+            );
+    
+            return !foundReview; 
+        });
+    
+        return missingReviews;
+    }
+    
+    
+    
 }
