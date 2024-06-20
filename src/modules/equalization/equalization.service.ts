@@ -1,14 +1,13 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
-import { EqualizationDto } from './dto/equalization.dto';
 import { UpdateEqualizationDto } from './dto/update-equalization.dto';
 
 @Injectable()
 export class EqualizationService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createEqualizationDto: CreateEqualizationDto): Promise<EqualizationDto> {
+  async create(createEqualizationDto: CreateEqualizationDto) {
     const existingEqualization = await this.prisma.equalization.findFirst({
       where: {
         evaluatorId: createEqualizationDto.evaluatorId,
@@ -23,34 +22,74 @@ export class EqualizationService {
 
     const equalization = await this.prisma.equalization.create({
       data: {
-        ...createEqualizationDto,
-        date: new Date(createEqualizationDto.date),
+        evaluator: {
+          connect: {
+            id: createEqualizationDto.evaluatorId
+          }
+        },
+        evaluated: {
+          connect: {
+            id: createEqualizationDto.evaluatedId
+          }
+        },
+        cycle: {
+          connect: {
+            id: createEqualizationDto.cycleId
+          }
+        },
+        date: new Date(),
+        finalGrade: 0,
+        status: 'Não finalizado'
       },
+      include: {
+        cycle: true
+      }
     });
 
-    return {
-      id: equalization.id,
-      evaluatorId: equalization.evaluatorId,
-      evaluatedId: equalization.evaluatedId,
-      cycleId: equalization.cycleId,
-      date: equalization.date,
-      finalGrade: equalization.finalGrade,
-    };
+    let totalScore = 0;
+    for (const score of createEqualizationDto.scores) {
+      await this.prisma.equalizationScore.create({
+        data: {
+          equalization: {
+            connect: {
+              id: score.equalizationId
+            }
+          },
+          criterion: {
+            connect: {
+              id: score.criterionId
+            }
+          },
+          grade: score.grade
+        }
+      });
+      totalScore += score.grade
+    }
+
+    const criteriaCount = await this.prisma.criterion.count();
+    const hasAllCriteria = criteriaCount === createEqualizationDto.scores.length
+    const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
+    const meanGrade = totalScore / createEqualizationDto.scores.length;
+    await this.prisma.equalization.update({
+      where: {
+        id: equalization.id,
+      },
+      data: {
+        finalGrade: meanGrade,
+        status: status
+      }
+    })
+
+    return equalization;
   }
 
-  async findAll(): Promise<EqualizationDto[]> {
+  async findAll() {
     const equalizations = await this.prisma.equalization.findMany();
-    return equalizations.map(equalization => ({
-      id: equalization.id,
-      evaluatorId: equalization.evaluatorId,
-      evaluatedId: equalization.evaluatedId,
-      cycleId: equalization.cycleId,
-      date: equalization.date,
-      finalGrade: equalization.finalGrade,
-    }));
+
+    return equalizations;
   }
 
-  async findOne(id: number): Promise<EqualizationDto> {
+  async findOne(id: number){
     const equalization = await this.prisma.equalization.findUnique({
       where: { id },
     });
@@ -59,77 +98,105 @@ export class EqualizationService {
       throw new ConflictException('Equalization not found');
     }
 
+    const scores = await this.prisma.equalizationScore.findMany({
+      where: {
+        equalizationId: equalization.id
+      },
+      include: {
+        criterion: true
+      }
+    });
+
     return {
-      id: equalization.id,
-      evaluatorId: equalization.evaluatorId,
-      evaluatedId: equalization.evaluatedId,
-      cycleId: equalization.cycleId,
-      date: equalization.date,
-      finalGrade: equalization.finalGrade,
-    };
+      ...equalization,
+      scores
+    }
   }
 
-    async findByEvaluator(evaluatorId: number): Promise<EqualizationDto[]> {
-        const equalizations = await this.prisma.equalization.findMany({
+  async findByEvaluator(evaluatorId: number) {
+        return await this.prisma.equalization.findMany({
         where: { evaluatorId },
         });
     
-        return equalizations.map(equalization => ({
-        id: equalization.id,
-        evaluatorId: equalization.evaluatorId,
-        evaluatedId: equalization.evaluatedId,
-        cycleId: equalization.cycleId,
-        date: equalization.date,
-        finalGrade: equalization.finalGrade,
-        }));
     }
 
-    async findByEvaluated(evaluatedId: number): Promise<EqualizationDto[]> {
-        const equalizations = await this.prisma.equalization.findMany({
+  async findByEvaluated(evaluatedId: number){
+        return await this.prisma.equalization.findMany({
         where: { evaluatedId },
         });
     
-        return equalizations.map(equalization => ({
-        id: equalization.id,
-        evaluatorId: equalization.evaluatorId,
-        evaluatedId: equalization.evaluatedId,
-        cycleId: equalization.cycleId,
-        date: equalization.date,
-        finalGrade: equalization.finalGrade,
-        }));
     }
 
-    async findByCycle(cycleId: number): Promise<EqualizationDto[]> {
-        const equalizations = await this.prisma.equalization.findMany({
+  async findByCycle(cycleId: number) {
+        return await this.prisma.equalization.findMany({
         where: { cycleId },
         });
     
-        return equalizations.map(equalization => ({
-        id: equalization.id,
-        evaluatorId: equalization.evaluatorId,
-        evaluatedId: equalization.evaluatedId,
-        cycleId: equalization.cycleId,
-        date: equalization.date,
-        finalGrade: equalization.finalGrade,
-        }));
     }
 
-    async editEqualation(id: number, updateEqualizationDto: UpdateEqualizationDto): Promise<EqualizationDto> {
+  async editEqualization(id: number, updateEqualizationDto: UpdateEqualizationDto){
         const equalization = await this.prisma.equalization.update({
             where: { id },
             data: {
-                ...updateEqualizationDto,
-                date: new Date(updateEqualizationDto.date),
+              evaluator: {
+                connect: {
+                  id: updateEqualizationDto.evaluatorId
+                }
+              },
+              evaluated: {
+                connect: {
+                  id: updateEqualizationDto.evaluatedId
+                }
+              },
+              cycle: {
+                connect: {
+                  id: updateEqualizationDto.cycleId
+                }
+              },
+              date: new Date(updateEqualizationDto.date),
             },
         });
 
-        return {
-            id: equalization.id,
-            evaluatorId: equalization.evaluatorId,
-            evaluatedId: equalization.evaluatedId,
-            cycleId: equalization.cycleId,
-            date: equalization.date,
-            finalGrade: equalization.finalGrade,
-        };
+        await this.prisma.equalizationScore.deleteMany({
+          where: {
+            equalizationId: id
+          }
+        });
+
+        let totalScore = 0;
+        for (const score of updateEqualizationDto.scores) {
+          await this.prisma.equalizationScore.create({
+            data: {
+              equalization: {
+                connect: {
+                  id: id
+                }
+              },
+              criterion: {
+                connect: {
+                  id: score.criterionId
+                }
+              },
+              grade: score.grade
+            }
+          });
+          totalScore += score.grade;
+        }
+        const criteriaCount = await this.prisma.criterion.count();
+        const hasAllCriteria = criteriaCount === updateEqualizationDto.scores.length;
+        const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
+        const meanGrade = totalScore / updateEqualizationDto.scores.length;
+
+        const updatedEqualization = await this.prisma.equalization.update({
+          where: {
+            id: id,
+          },
+          data: {
+            finalGrade: meanGrade,
+            status: status,
+          }
+        });
+
+        return updatedEqualization;
     }
 }

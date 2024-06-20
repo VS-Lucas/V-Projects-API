@@ -47,7 +47,7 @@ export class EqualizationController {
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateEqualizationDto: any) {
-        return this.equalizationService.editEqualation(+id, updateEqualizationDto);
+        return this.equalizationService.editEqualization(+id, updateEqualizationDto);
     }
 
 }

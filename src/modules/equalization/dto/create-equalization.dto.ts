@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsISO8601 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsISO8601, ValidateNested } from 'class-validator';
+import { EqualizationScore } from './equalization-scores.dto';
 
 export class CreateEqualizationDto {
   @IsNotEmpty()
@@ -22,8 +24,9 @@ export class CreateEqualizationDto {
   @ApiProperty()
   date: string;
 
+  @ApiProperty({ type: [EqualizationScore] })
   @IsNotEmpty()
-  @IsNumber()
-  @ApiProperty()
-  finalGrade: number;
+  @ValidateNested({ each: true })
+  @Type(() => EqualizationScore)
+  scores: EqualizationScore[];
 }
