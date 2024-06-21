@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { RegisterPeerReviewDto } from './dto/create-peer-review.dto';
+import { RegisterPeerReviewDto } from './dto/register-peer-review.dto';
 
 @Injectable()
 export class PeerReviewService {

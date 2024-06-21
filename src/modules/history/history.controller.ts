@@ -1,6 +1,8 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { HistoryService } from './history.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("History")
 @Controller('history')
 export class HistoryController {
 
