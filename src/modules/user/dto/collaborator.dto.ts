@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Address } from './address.dto';
 
-export class CreatedUserDto {
+export class Collaborator {
+    @ApiProperty()
+    id: number;
+
     @ApiProperty()
     email: string;
     
@@ -10,7 +12,7 @@ export class CreatedUserDto {
 
     @ApiProperty()
     role: string;
-    
-    // @ApiProperty()
-    // address: Address
+
+    @ApiProperty()
+    position: string;
 }
