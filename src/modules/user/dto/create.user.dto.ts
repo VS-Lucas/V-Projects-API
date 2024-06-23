@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { Address } from "./address.dto";
+import { Type } from "class-transformer";
 
 export enum UserRole {
     COLABORADOR = 'COLABORADOR',
@@ -34,4 +36,9 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     position: string
+
+    // @ApiProperty({ type: Address })
+    // @IsNotEmpty()
+    // @Type(() => Address)
+    // address: Address
 }
