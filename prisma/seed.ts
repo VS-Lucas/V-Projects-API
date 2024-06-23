@@ -197,83 +197,83 @@ async function main() {
   );
 
   // Seed for PeerReview
-  const peerReviewsData = [
-    {
-      evaluatorId: users[0].id,
-      evaluatedId: users[1].id,
-      cycleId: cycle.id,
-      meanGrade: 4.2,
-      PeerReviewScores: {
-        create: [
-          {
-            criterionId: 1,
-            grade: 4.0,
-            justification: 'Consistent performance.',
-          },
-          {
-            criterionId: 2,
-            grade: 4.5,
-            justification: 'Strong leadership skills.',
-          },
-        ],
-      },
-    },
-    {
-      evaluatorId: users[1].id,
-      evaluatedId: users[0].id,
-      cycleId: cycle.id,
-      meanGrade: 4.8,
-      PeerReviewScores: {
-        create: [
-          {
-            criterionId: 3,
-            grade: 4.9,
-            justification: 'Excellent organization.',
-          },
-          {
-            criterionId: 4,
-            grade: 4.7,
-            justification: 'Quick learning.',
-          },
-        ],
-      },
-    },
-  ];
+  // const peerReviewsData = [
+  //   {
+  //     evaluatorId: users[0].id,
+  //     evaluatedId: users[1].id,
+  //     cycleId: cycle.id,
+  //     meanGrade: 4.2,
+  //     PeerReviewScores: {
+  //       create: [
+  //         {
+  //           criterionId: 1,
+  //           grade: 4.0,
+  //           justification: 'Consistent performance.',
+  //         },
+  //         {
+  //           criterionId: 2,
+  //           grade: 4.5,
+  //           justification: 'Strong leadership skills.',
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   {
+  //     evaluatorId: users[1].id,
+  //     evaluatedId: users[0].id,
+  //     cycleId: cycle.id,
+  //     meanGrade: 4.8,
+  //     PeerReviewScores: {
+  //       create: [
+  //         {
+  //           criterionId: 3,
+  //           grade: 4.9,
+  //           justification: 'Excellent organization.',
+  //         },
+  //         {
+  //           criterionId: 4,
+  //           grade: 4.7,
+  //           justification: 'Quick learning.',
+  //         },
+  //       ],
+  //     },
+  //   },
+  // ];
 
-  const peerReviews = await Promise.all(
-    peerReviewsData.map(review => prisma.peerReview.create({ data: review }))
-  );
+  // const peerReviews = await Promise.all(
+  //   peerReviewsData.map(review => prisma.peerReview.create({ data: review }))
+  // );
 
   // Seed for Equalization
-  const equalizationsData = [
-    {
-      evaluatorId: users[5].id,  // Admin user
-      evaluatedId: users[0].id,
-      cycleId: cycle.id,
-      date: new Date(),
-      finalGrade: 4.3,
-    },
-    {
-      evaluatorId: users[5].id,  // Admin user
-      evaluatedId: users[1].id,
-      cycleId: cycle.id,
-      date: new Date(),
-      finalGrade: 4.0,
-    },
-  ];
+//   const equalizationsData = [
+//     {
+//       evaluatorId: users[5].id,  // Admin user
+//       evaluatedId: users[0].id,
+//       cycleId: cycle.id,
+//       date: new Date(),
+//       finalGrade: 4.3,
+//     },
+//     {
+//       evaluatorId: users[5].id,  // Admin user
+//       evaluatedId: users[1].id,
+//       cycleId: cycle.id,
+//       date: new Date(),
+//       finalGrade: 4.0,
+//     },
+//   ];
 
-  const equalizations = await Promise.all(
-    equalizationsData.map(equalization => prisma.equalization.create({ data: equalization }))
-  );
+//   const equalizations = await Promise.all(
+//     equalizationsData.map(equalization => prisma.equalization.create({ data: equalization }))
+//   );
 
-  console.log({ users, criteria, cycle, selfAssessments, peerReviews, equalizations });
+//   console.log({ users, criteria, cycle, selfAssessments, peerReviews, equalizations });
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  // .catch((e) => {
+  //   console.error(e);
+  //   process.exit(1);
+  // })
+  // .finally(async () => {
+  //   await prisma.$disconnect();
+  // });
