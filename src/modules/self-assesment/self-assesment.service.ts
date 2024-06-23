@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSelfAssesmentDto } from './dto/create-self-assesment.dto';
 import { PrismaService } from 'src/database/prisma.service';
+import { UpdateSelfAssesmentDto } from './dto/update-self-assesment.dto';
 
 @Injectable()
 export class SelfAssesmentService {
@@ -63,19 +64,69 @@ export class SelfAssesmentService {
 
   }
 
-  // findAll() {
-  //   return `This action returns all selfAssesment`;
-  // }
+  async findAll() {
+    const selfAssessments = await this.prisma.selfAssessment.findMany({
+      include: {
+        user: true,
+        cycle: true,
+        SelfAssessmentScores: true
+      }
+    });
+    return selfAssessments;
+  }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} selfAssesment`;
-  // }
+  async findOne(id: number) {
+    const selfAssessment = await this.prisma.selfAssessment.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        cycle: true,
+        SelfAssessmentScores: true
+      }
+    });
+    return selfAssessment;
+  }
 
-  // update(id: number, updateSelfAssesmentDto: UpdateSelfAssesmentDto) {
-  //   return `This action updates a #${id} selfAssesment`;
-  // }
+  async update(id: number, updateSelfAssessmentDto: UpdateSelfAssesmentDto) {
+    const existingSelfAssessment = await this.prisma.selfAssessment.findUnique({ where: { id } });
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} selfAssesment`;
-  // }
+    if (!existingSelfAssessment) {
+      throw new NotFoundException(`Self assessment with ID ${id} not found`);
+    }
+
+    if (updateSelfAssessmentDto.scores) {
+      await this.prisma.selfAssessmentScore.deleteMany({
+        where: { selfAssessmentId: id }
+      });
+
+    let totalScore = 0;
+    for (const score of updateSelfAssessmentDto.scores) {
+      await this.prisma.selfAssessmentScore.create({
+        data: {
+          selfAssessment: {
+            connect: {id }
+          },
+          criterion: {
+            connect: {
+              id: score.criterionId
+            }
+          },
+          grade: score.grade,
+          justification: score.justification
+        }
+      });
+   
+      totalScore += score.grade
+    }
+      const meanGrade = totalScore / updateSelfAssessmentDto.scores.length;
+      return await this.prisma.selfAssessment.update({
+      where: {
+        id: id,
+      },
+      data: {
+        meanGrade: meanGrade
+      }
+    })
+    }
+  }
 }
