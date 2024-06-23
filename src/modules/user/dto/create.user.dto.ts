@@ -30,4 +30,8 @@ export class CreateUserDto {
         example: UserRole.COLABORADOR,
     })
     role: UserRole;
+
+    @IsString()
+    @IsNotEmpty()
+    position: string
 }

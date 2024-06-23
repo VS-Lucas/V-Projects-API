@@ -6,10 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
   // Hash passwords
   const hashedPassword1 = await bcrypt.hash('securepassword1', 10);
-  const hashedPassword2 = await bcrypt.hash('securepassword1', 10);
-  const hashedPassword3 = await bcrypt.hash('securepassword1', 10);
-  const hashedPassword4 = await bcrypt.hash('securepassword1', 10);
-  const hashedPasswordAdmin = await bcrypt.hash('securepassword2', 10);
+  const hashedPassword2 = await bcrypt.hash('securepassword2', 10);
+  const hashedPassword3 = await bcrypt.hash('securepassword3', 10);
+  const hashedPassword4 = await bcrypt.hash('securepassword4', 10);
+  const hashedPassword5 = await bcrypt.hash('securepassword5', 10);
+  const hashedPasswordAdmin = await bcrypt.hash('securepasswordAdmin', 10);
 
   // Seed for Users
   const usersData = [
@@ -82,6 +83,23 @@ async function main() {
       },
     },
     {
+      email: 'lucas@example.com',
+      name: 'Lucas',
+      password: hashedPassword5,
+      role: 'COLABORADOR',
+      position: 'Student',
+      address: {
+        create: {
+          street: '1011 Last St',
+          district: 'Downtown',
+          city: 'Cityville',
+          state: 'Stateville',
+          country: 'Countryland',
+          number: '4',
+        },
+      },
+    },
+    {
       email: 'admin@example.com',
       name: 'Admin User',
       password: hashedPasswordAdmin,
@@ -130,7 +148,125 @@ async function main() {
     },
   });
 
-  console.log({ users, criteria, cycle });
+  // Seed for SelfAssessment
+  const selfAssessmentsData = [
+    {
+      userId: users[0].id,
+      cycleId: cycle.id,
+      date: new Date(),
+      meanGrade: 4.5,
+      SelfAssessmentScores: {
+        create: [
+          {
+            criterionId: 1,
+            grade: 4.0,
+            justification: 'Good performance in Q1.',
+          },
+          {
+            criterionId: 2,
+            grade: 5.0,
+            justification: 'Excellent teamwork.',
+          },
+        ],
+      },
+    },
+    {
+      userId: users[1].id,
+      cycleId: cycle.id,
+      date: new Date(),
+      meanGrade: 4.0,
+      SelfAssessmentScores: {
+        create: [
+          {
+            criterionId: 3,
+            grade: 4.5,
+            justification: 'Great organizational skills.',
+          },
+          {
+            criterionId: 4,
+            grade: 3.5,
+            justification: 'Good learning capacity.',
+          },
+        ],
+      },
+    },
+  ];
+
+  const selfAssessments = await Promise.all(
+    selfAssessmentsData.map(assessment => prisma.selfAssessment.create({ data: assessment }))
+  );
+
+  // Seed for PeerReview
+  const peerReviewsData = [
+    {
+      evaluatorId: users[0].id,
+      evaluatedId: users[1].id,
+      cycleId: cycle.id,
+      meanGrade: 4.2,
+      PeerReviewScores: {
+        create: [
+          {
+            criterionId: 1,
+            grade: 4.0,
+            justification: 'Consistent performance.',
+          },
+          {
+            criterionId: 2,
+            grade: 4.5,
+            justification: 'Strong leadership skills.',
+          },
+        ],
+      },
+    },
+    {
+      evaluatorId: users[1].id,
+      evaluatedId: users[0].id,
+      cycleId: cycle.id,
+      meanGrade: 4.8,
+      PeerReviewScores: {
+        create: [
+          {
+            criterionId: 3,
+            grade: 4.9,
+            justification: 'Excellent organization.',
+          },
+          {
+            criterionId: 4,
+            grade: 4.7,
+            justification: 'Quick learning.',
+          },
+        ],
+      },
+    },
+  ];
+
+  const peerReviews = await Promise.all(
+    peerReviewsData.map(review => prisma.peerReview.create({ data: review }))
+  );
+
+  // Seed for Equalization
+  const equalizationsData = [
+    {
+      evaluatorId: users[5].id,  // Admin user
+      evaluatedId: users[0].id,
+      cycleId: cycle.id,
+      date: new Date(),
+      finalGrade: 4.3,
+    },
+    {
+      evaluatorId: users[5].id,  // Admin user
+      evaluatedId: users[1].id,
+      cycleId: cycle.id,
+      date: new Date(),
+      finalGrade: 4.0,
+    },
+  ];
+
+  const equalizations = await Promise.all(
+    equalizationsData.map(equalization => prisma.equalization.create({ data: equalization }))
+  );
+
+  console.log({ users, criteria, cycle, selfAssessments, peerReviews, equalizations });
 }
 
 main()
