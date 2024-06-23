@@ -6,7 +6,10 @@ import { UserModule } from './modules/user/user.module';
 import { CyclesModule } from './modules/cycles/cycles.module';
 import { PrismaService } from './database/prisma.service';
 import { SelfAssesmentModule } from './modules/self-assesment/self-assesment.module';
+import {HistoryModule} from './modules/history/history.module';
+import { PeerReviewModule } from './modules/peer-review/peer-review.module';
 import { EqualizationModule } from './modules/equalization/equalization.module';
+
 
 @Module({
   imports: [
@@ -14,6 +17,8 @@ import { EqualizationModule } from './modules/equalization/equalization.module';
     AuthModule,
     CyclesModule,
     SelfAssesmentModule,
+    HistoryModule,
+    PeerReviewModule,
     EqualizationModule
   ],
   controllers: [AppController],

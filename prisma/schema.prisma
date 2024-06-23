@@ -39,8 +39,8 @@ model Criterion {
   id                  Int                   @default(autoincrement()) @id
   name                String
   type                String
-  SelfAssessmentScores                      SelfAssessmentScore[]
-  PeerReviewScores                          PeerReviewScore[]
+  SelfAssessmentScores SelfAssessmentScore[]
+  PeerReviewScores     PeerReviewScore[]
   EqualizationScore                         EqualizationScore[]
 }
 
@@ -84,17 +84,17 @@ model PeerReview {
   cycle             Cycle          @relation(fields: [cycleId], references: [id])
   cycleId           Int
   meanGrade         Float
-  PeerReviewScores  PeerReviewScore[]
+  PeerReviewScores  PeerReviewScore?
 }
 
 model PeerReviewScore {
   id             Int            @default(autoincrement()) @id
   assessment     PeerReview     @relation(fields: [assessmentId], references: [id])
-  assessmentId   Int
-  criterion      Criterion      @relation(fields: [criterionId], references: [id])
-  criterionId    Int
-  grade          Float
-  justification  String
+  assessmentId   Int @unique
+  behavior       Int  
+  tecniques      Int 
+  toImprove      String 
+  toPraise       String  
 }
 
 model Equalization {

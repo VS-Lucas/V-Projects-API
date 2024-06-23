@@ -129,8 +129,4 @@ export class SelfAssesmentService {
     })
     }
   }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} selfAssesment`;
-  // }
 }
