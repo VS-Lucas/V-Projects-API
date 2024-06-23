@@ -129,29 +129,4 @@ export class SelfAssesmentService {
     })
     }
   }
-
-  // para atualizarr
-//   {
-//     "userId": 1,
-//     "cycleId": 1,
-//     "scores": [
-//         {
-//             "selfAssessmentId": 1,
-//             "criterionId": 1,
-//             "grade": 9,
-//             "justification": "Bom desempenho na tarefa."
-//         },
-//         {
-//             "selfAssessmentId": 1,
-//             "criterionId": 2,
-//             "grade": 8,
-//             "justification": "Poderia melhorar na comunicação com a equipe."
-//         }
-//     ]
-// }
-
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} selfAssesment`;
-  // }
 }
