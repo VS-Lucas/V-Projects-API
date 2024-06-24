@@ -67,7 +67,6 @@ export class PeerReviewService {
             }
 
             const existingReview = await this.reviewExist(review.evaluatorId, review.evaluatedId, review.cycleId);
-            // console.log(existingReview);
 
             if (!existingReview) {
                 await this.createPeerReview(review);

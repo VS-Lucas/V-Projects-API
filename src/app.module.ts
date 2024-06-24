@@ -8,6 +8,8 @@ import { PrismaService } from './database/prisma.service';
 import { SelfAssesmentModule } from './modules/self-assesment/self-assesment.module';
 import {HistoryModule} from './modules/history/history.module';
 import { PeerReviewModule } from './modules/peer-review/peer-review.module';
+import { EqualizationModule } from './modules/equalization/equalization.module';
+
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { PeerReviewModule } from './modules/peer-review/peer-review.module';
     SelfAssesmentModule,
     HistoryModule,
     PeerReviewModule,
+    EqualizationModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
