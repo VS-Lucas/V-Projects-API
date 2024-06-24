@@ -35,9 +35,4 @@ export class SelfAssesmentController {
   update(@Param('id') id: string, @Body() updateSelfAssesmentDto: UpdateSelfAssesmentDto) {
     return this.selfAssesmentService.update(+id, updateSelfAssesmentDto);
   }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.selfAssesmentService.remove(+id);
-  // }
 }

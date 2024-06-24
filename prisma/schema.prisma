@@ -40,7 +40,6 @@ model Criterion {
   name                String
   type                String
   SelfAssessmentScores SelfAssessmentScore[]
-  PeerReviewScores     PeerReviewScore[]
   EqualizationScore                         EqualizationScore[]
 }
 

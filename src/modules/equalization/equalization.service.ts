@@ -2,10 +2,14 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { UpdateEqualizationDto } from './dto/update-equalization.dto';
+import { SelfAssesmentService } from '../self-assesment/self-assesment.service';
 
 @Injectable()
 export class EqualizationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly selfAssesmentService: SelfAssesmentService
+  ) {}
 
   async create(createEqualizationDto: CreateEqualizationDto) {
     const existingEqualization = await this.prisma.equalization.findFirst({
@@ -85,9 +89,54 @@ export class EqualizationService {
 
   async findAll() {
     const equalizations = await this.prisma.equalization.findMany();
+    const scores = await this.prisma.equalizationScore.findMany();
+    const selfAssessment = await this.selfAssesmentService.findAll();
+    console.log(selfAssessment)
 
-    return equalizations;
-  }
+    const mappedEqualizations = equalizations.map(equalization => {
+    
+      const equalizationScoresForEqualization = scores.filter(scores => scores.equalizationId === equalization.id);
+      
+      const criteriaScores = {};
+
+      // Agrupa os scores de equalization por critério
+      equalizationScoresForEqualization.forEach(score => {
+        if (!criteriaScores[score.criterionId]) {
+          criteriaScores[score.criterionId] = {
+            equalizationScores: [],
+            selfAssessmentScores: [],
+          };
+        }
+        criteriaScores[score.criterionId].equalizationScores.push(score);
+      });
+      
+      const selfAssessmentScoresForEqualization = selfAssessment.filter(
+        selfAssessment => selfAssessment.cycle.id === equalization.cycleId &&
+                          selfAssessment.user.id === equalization.evaluatedId
+      );
+
+      selfAssessmentScoresForEqualization.forEach(score => {
+        score.SelfAssessmentScores.forEach(selfAssessmentScore => {
+          const criterionId = selfAssessmentScore.criterionId;
+      
+          if (!criteriaScores[criterionId]) {
+            criteriaScores[criterionId] = {
+              equalizationScores: [],
+              selfAssessmentScores: [],
+            };
+          }
+      
+          criteriaScores[criterionId].selfAssessmentScores.push(selfAssessmentScore);
+        });
+      });
+
+      return {
+        criteriaScores,
+      };
+    })
+    return mappedEqualizations;
+  
+}
 
   async findOne(id: number){
     const equalization = await this.prisma.equalization.findUnique({
