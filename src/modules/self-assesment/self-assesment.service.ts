@@ -129,4 +129,19 @@ export class SelfAssesmentService {
     })
     }
   }
+
+  async findByUserIdAndCycle(userId: number, cycleId: number) {
+    const selfAssessments = await this.prisma.selfAssessment.findMany({
+      where: {
+        userId: userId,
+        cycleId: cycleId
+      },
+      include: {
+        user: true,
+        cycle: true,
+        SelfAssessmentScores: true
+      }
+    });
+    return selfAssessments;
+  }
 }

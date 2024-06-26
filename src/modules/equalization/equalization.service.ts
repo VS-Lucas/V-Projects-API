@@ -91,7 +91,6 @@ export class EqualizationService {
     const equalizations = await this.prisma.equalization.findMany();
     const scores = await this.prisma.equalizationScore.findMany();
     const selfAssessment = await this.selfAssesmentService.findAll();
-    console.log(selfAssessment)
 
     const mappedEqualizations = equalizations.map(equalization => {
     
@@ -154,12 +153,46 @@ export class EqualizationService {
         criterion: true
       }
     });
+    
+      const selfAssessment = await this.selfAssesmentService.findByUserIdAndCycle(equalization.evaluatedId, equalization.cycleId );
 
-    return {
-      ...equalization,
-      scores
-    }
+      const criteriaScores = {};
+
+      scores.forEach(score => {
+          if (!criteriaScores[score.criterionId]) {
+            criteriaScores[score.criterionId] = {
+              equalizationScores: [],
+              selfAssessmentScores: [],
+            };
+          }
+          criteriaScores[score.criterionId].equalizationScores.push(score);
+        });
+
+        selfAssessment.forEach(score => {
+          score.SelfAssessmentScores.forEach(selfAssessmentScore => {
+            const criterionId = selfAssessmentScore.criterionId;
+        
+            if (!criteriaScores[criterionId]) {
+              criteriaScores[criterionId] = {
+                equalizationScores: [],
+                selfAssessmentScores: [],
+              };
+            }
+        
+            criteriaScores[criterionId].selfAssessmentScores.push(selfAssessmentScore);
+          });
+        });
+
+      return {
+        criteriaScores,
+      };
   }
+  //   return mappedEqualizations;
+  // //   return {
+  // //     ...equalization,
+  // //     scores
+  // //   }
+  // }
 
   async findByEvaluator(evaluatorId: number) {
         return await this.prisma.equalization.findMany({
@@ -183,7 +216,7 @@ export class EqualizationService {
     }
 
   async editEqualization(id: number, updateEqualizationDto: UpdateEqualizationDto){
-        const equalization = await this.prisma.equalization.update({
+        await this.prisma.equalization.update({
             where: { id },
             data: {
               evaluator: {
