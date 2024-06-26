@@ -70,9 +70,9 @@ export class EqualizationService {
       totalScore += score.grade
     }
 
-    const criteriaCount = await this.prisma.criterion.count();
-    const hasAllCriteria = criteriaCount === createEqualizationDto.scores.length
-    const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
+    // const criteriaCount = await this.prisma.criterion.count();
+    // const hasAllCriteria = criteriaCount === createEqualizationDto.scores.length
+    // const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
     const meanGrade = totalScore / createEqualizationDto.scores.length;
     await this.prisma.equalization.update({
       where: {
@@ -80,7 +80,7 @@ export class EqualizationService {
       },
       data: {
         finalGrade: meanGrade,
-        status: status
+        // status: status
       }
     })
 
@@ -99,7 +99,6 @@ export class EqualizationService {
       
       const criteriaScores = {};
 
-      // Agrupa os scores de equalization por critério
       equalizationScoresForEqualization.forEach(score => {
         if (!criteriaScores[score.criterionId]) {
           criteriaScores[score.criterionId] = {
@@ -231,9 +230,9 @@ export class EqualizationService {
           });
           totalScore += score.grade;
         }
-        const criteriaCount = await this.prisma.criterion.count();
-        const hasAllCriteria = criteriaCount === updateEqualizationDto.scores.length;
-        const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
+        // const criteriaCount = await this.prisma.criterion.count();
+        // const hasAllCriteria = criteriaCount === updateEqualizationDto.scores.length;
+        // const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
         const meanGrade = totalScore / updateEqualizationDto.scores.length;
 
         const updatedEqualization = await this.prisma.equalization.update({
@@ -242,7 +241,7 @@ export class EqualizationService {
           },
           data: {
             finalGrade: meanGrade,
-            status: status,
+            // status: status,
           }
         });
 
