@@ -17,5 +17,5 @@ export class Address {
     country: string;
 
     @ApiProperty()
-    number: number;
+    number: string;
 }
