@@ -49,6 +49,7 @@ model SelfAssessment {
   userId               Int
   cycle                Cycle                @relation(fields: [cycleId], references: [id])
   cycleId              Int
+  status               Boolean              @default(false)
   date                 DateTime
   meanGrade            Float
   SelfAssessmentScores SelfAssessmentScore[]
