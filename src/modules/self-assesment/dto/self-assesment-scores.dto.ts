@@ -3,9 +3,7 @@ import { IsInt, IsNumber, IsString, IsNotEmpty } from "class-validator";
 
 export class SelfAssesmentScores {
     @ApiProperty()
-    @IsInt()
-    @IsNotEmpty()
-    selfAssessmentId: number;
+    selfAssessmentId?: number;
 
     @ApiProperty()
     @IsInt()
