@@ -40,6 +40,7 @@ model Criterion {
   name                String
   type                String
   SelfAssessmentScores SelfAssessmentScore[]
+  EqualizationScore                         EqualizationScore[]
 }
 
 model SelfAssessment {
@@ -48,6 +49,7 @@ model SelfAssessment {
   userId               Int
   cycle                Cycle                @relation(fields: [cycleId], references: [id])
   cycleId              Int
+  status               Boolean              @default(false)
   date                 DateTime
   meanGrade            Float
   SelfAssessmentScores SelfAssessmentScore[]
@@ -104,5 +106,16 @@ model Equalization {
   cycle          Cycle    @relation(fields: [cycleId], references: [id])
   cycleId        Int
   date           DateTime
+  status         String   @default("Não finalizado")
   finalGrade     Float
+  EqualizationScore       EqualizationScore[]
+}
+
+model EqualizationScore {
+  id                Int             @default(autoincrement()) @id
+  equalization      Equalization    @relation(fields: [equalizationId], references: [id])
+  equalizationId    Int
+  criterion         Criterion       @relation(fields: [criterionId], references: [id])
+  criterionId       Int
+  grade             Float
 }
