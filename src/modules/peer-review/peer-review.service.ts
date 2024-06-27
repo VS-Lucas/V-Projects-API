@@ -29,13 +29,16 @@ export class PeerReviewService {
 
         const missingReviews = await this.verify(evaluatorId,  cycle, registerPeerReview) 
 
-        console.log("Registros")
-        console.log(registerPeerReview)
+        // console.log("Registros")
+        // console.log(registerPeerReview)
 
-        console.log("reviews sobrando")
-        console.log(missingReviews)
+        // console.log("reviews sobrando")
+        // console.log(missingReviews)
 
         missingReviews.forEach((missingReview) => {
+
+            console.log(missingReview)
+            console.log(" ")
 
             this.deletePeerReview(missingReview.id, missingReview.PeerReviewScores.id)
 
@@ -237,7 +240,7 @@ export class PeerReviewService {
     async verify(evaluatorId: number, cycleId: number, registerPeerReviewList: RegisterPeerReviewDto[]) {
         const actualReviews = await this.getPeerReviewsByCycle(evaluatorId, cycleId);
 
-        console.log(actualReviews)
+        // console.log(actualReviews)
     
         const missingReviews = actualReviews.filter(record => {
             const foundReview = registerPeerReviewList.find(review => 
@@ -249,7 +252,5 @@ export class PeerReviewService {
     
         return missingReviews;
     }
-    
-    
     
 }
