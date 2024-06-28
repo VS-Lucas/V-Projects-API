@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PeerReviewService } from './peer-review.service';
 import { RegisterPeerReviewDto } from './dto/register-peer-review.dto';
-import { ApiBody, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Peer Reviews")
-@Controller('peer-review')
+@Controller('api/peer-review')
 export class PeerReviewController {
 
     constructor(private readonly peerReviewService: PeerReviewService) {}
