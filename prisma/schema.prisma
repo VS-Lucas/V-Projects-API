@@ -106,7 +106,7 @@ model Equalization {
   cycle          Cycle    @relation(fields: [cycleId], references: [id])
   cycleId        Int
   date           DateTime
-  status         String   @default("false")
+  status         Boolean   @default(false)
   finalGrade     Float
   EqualizationScore       EqualizationScore[]
 }
