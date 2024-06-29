@@ -42,8 +42,7 @@ export class EqualizationService {
           }
         },
         date: new Date(),
-        finalGrade: 0,
-        status: 'Não finalizado'
+        finalGrade: 0
       },
       include: {
         cycle: true
@@ -56,7 +55,7 @@ export class EqualizationService {
         data: {
           equalization: {
             connect: {
-              id: score.equalizationId
+              id: equalization.id
             }
           },
           criterion: {
@@ -70,17 +69,13 @@ export class EqualizationService {
       totalScore += score.grade
     }
 
-    // const criteriaCount = await this.prisma.criterion.count();
-    // const hasAllCriteria = criteriaCount === createEqualizationDto.scores.length
-    // const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
     const meanGrade = totalScore / createEqualizationDto.scores.length;
     await this.prisma.equalization.update({
       where: {
         id: equalization.id,
       },
       data: {
-        finalGrade: meanGrade,
-        // status: status
+        finalGrade: meanGrade
       }
     })
 
@@ -89,51 +84,51 @@ export class EqualizationService {
 
   async findAll() {
     const equalizations = await this.prisma.equalization.findMany();
-    const scores = await this.prisma.equalizationScore.findMany();
-    const selfAssessment = await this.selfAssesmentService.findAll();
-    console.log(selfAssessment)
+    // const scores = await this.prisma.equalizationScore.findMany();
+    // const selfAssessment = await this.selfAssesmentService.findAll();
 
-    const mappedEqualizations = equalizations.map(equalization => {
+    // const mappedEqualizations = equalizations.map(equalization => {
     
-      const equalizationScoresForEqualization = scores.filter(scores => scores.equalizationId === equalization.id);
+    //   const equalizationScoresForEqualization = scores.filter(scores => scores.equalizationId === equalization.id);
       
-      const criteriaScores = {};
+    //   const criteriaScores = {};
 
-      equalizationScoresForEqualization.forEach(score => {
-        if (!criteriaScores[score.criterionId]) {
-          criteriaScores[score.criterionId] = {
-            equalizationScores: [],
-            selfAssessmentScores: [],
-          };
-        }
-        criteriaScores[score.criterionId].equalizationScores.push(score);
-      });
+    //   equalizationScoresForEqualization.forEach(score => {
+    //     if (!criteriaScores[score.criterionId]) {
+    //       criteriaScores[score.criterionId] = {
+    //         equalizationScores: [],
+    //         selfAssessmentScores: [],
+    //       };
+    //     }
+    //     criteriaScores[score.criterionId].equalizationScores.push(score);
+    //   });
       
-      const selfAssessmentScoresForEqualization = selfAssessment.filter(
-        selfAssessment => selfAssessment.cycle.id === equalization.cycleId &&
-                          selfAssessment.user.id === equalization.evaluatedId
-      );
+    //   const selfAssessmentScoresForEqualization = selfAssessment.filter(
+    //     selfAssessment => selfAssessment.cycle.id === equalization.cycleId &&
+    //                       selfAssessment.user.id === equalization.evaluatedId
+    //   );
 
-      selfAssessmentScoresForEqualization.forEach(score => {
-        score.SelfAssessmentScores.forEach(selfAssessmentScore => {
-          const criterionId = selfAssessmentScore.criterionId;
+    //   selfAssessmentScoresForEqualization.forEach(score => {
+    //     score.SelfAssessmentScores.forEach(selfAssessmentScore => {
+    //       const criterionId = selfAssessmentScore.criterionId;
       
-          if (!criteriaScores[criterionId]) {
-            criteriaScores[criterionId] = {
-              equalizationScores: [],
-              selfAssessmentScores: [],
-            };
-          }
+    //       if (!criteriaScores[criterionId]) {
+    //         criteriaScores[criterionId] = {
+    //           equalizationScores: [],
+    //           selfAssessmentScores: [],
+    //         };
+    //       }
       
-          criteriaScores[criterionId].selfAssessmentScores.push(selfAssessmentScore);
-        });
-      });
+    //       criteriaScores[criterionId].selfAssessmentScores.push(selfAssessmentScore);
+    //     });
+    //   });
 
-      return {
-        criteriaScores,
-      };
-    })
-    return mappedEqualizations;
+    //   return {
+    //     criteriaScores,
+    //   };
+    // })
+    // return mappedEqualizations;
+    return equalizations;
   
 }
 
@@ -154,11 +149,39 @@ export class EqualizationService {
         criterion: true
       }
     });
+    
+      const selfAssessment = await this.selfAssesmentService.findByUserIdAndCycle(equalization.evaluatedId, equalization.cycleId );
 
-    return {
-      ...equalization,
-      scores
-    }
+      const criteriaScores = {};
+
+      scores.forEach(score => {
+          if (!criteriaScores[score.criterionId]) {
+            criteriaScores[score.criterionId] = {
+              equalizationScores: [],
+              selfAssessmentScores: [],
+            };
+          }
+          criteriaScores[score.criterionId].equalizationScores.push(score);
+        });
+
+        selfAssessment.forEach(score => {
+          score.SelfAssessmentScores.forEach(selfAssessmentScore => {
+            const criterionId = selfAssessmentScore.criterionId;
+        
+            if (!criteriaScores[criterionId]) {
+              criteriaScores[criterionId] = {
+                equalizationScores: [],
+                selfAssessmentScores: [],
+              };
+            }
+        
+            criteriaScores[criterionId].selfAssessmentScores.push(selfAssessmentScore);
+          });
+        });
+
+      return {
+        criteriaScores,
+      };
   }
 
   async findByEvaluator(evaluatorId: number) {
@@ -183,7 +206,7 @@ export class EqualizationService {
     }
 
   async editEqualization(id: number, updateEqualizationDto: UpdateEqualizationDto){
-        const equalization = await this.prisma.equalization.update({
+        await this.prisma.equalization.update({
             where: { id },
             data: {
               evaluator: {
@@ -230,9 +253,6 @@ export class EqualizationService {
           });
           totalScore += score.grade;
         }
-        // const criteriaCount = await this.prisma.criterion.count();
-        // const hasAllCriteria = criteriaCount === updateEqualizationDto.scores.length;
-        // const status = hasAllCriteria ? 'Finalizado' : 'Não finalizado';
         const meanGrade = totalScore / updateEqualizationDto.scores.length;
 
         const updatedEqualization = await this.prisma.equalization.update({
@@ -241,10 +261,21 @@ export class EqualizationService {
           },
           data: {
             finalGrade: meanGrade,
-            // status: status,
           }
         });
 
         return updatedEqualization;
+    }
+
+  async deleteEqualization(id: number){
+        await this.prisma.equalizationScore.deleteMany({
+            where: {
+              equalizationId: id
+            }
+        });
+
+        await this.prisma.equalization.delete({
+            where: { id },
+        });
     }
 }

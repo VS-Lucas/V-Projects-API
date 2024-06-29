@@ -3,9 +3,7 @@ import { IsInt, IsNumber, IsNotEmpty } from "class-validator";
 
 export class EqualizationScore {
     @ApiProperty()
-    @IsInt()
-    @IsNotEmpty()
-    equalizationId: number;
+    equalizationId?: number;
 
     @ApiProperty()
     @IsInt()

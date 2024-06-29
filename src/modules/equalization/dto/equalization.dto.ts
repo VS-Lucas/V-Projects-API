@@ -20,7 +20,7 @@ export class EqualizationDto {
   date: Date;
 
   @ApiProperty()
-  status?: string;
+  status?: boolean;
 
   @ApiProperty({ type: [EqualizationScore] })
   @IsNotEmpty()
