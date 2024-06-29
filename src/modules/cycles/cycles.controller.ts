@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, HttpException, HttpStatus }
 import { CyclesService } from './cycles.service';
 import { CreateCycleDto } from './dto/create.cycle.dto';
 import { CreatedCycleDto } from './dto/created.cycle.dto';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('api/cycles')
 @ApiTags('Cycle')
@@ -19,6 +19,21 @@ export class CyclesController {
       }  
   }
 
+  @Get()
+  async getAllCycles() {
+    try {
+        return await this.cyclesService.getAllCycles();
+      } catch (error) {
+        throw new HttpException('Error retrieving cycles', HttpStatus.INTERNAL_SERVER_ERROR);
+      }  
+  }
+
+  @Get('/current')
+  @ApiOkResponse({ type: CreatedCycleDto })
+  async getCurrentCycle(): Promise<CreateCycleDto> {
+    return this.cyclesService.getCurrentCycle();
+  }
+
   @Get(':id')
   async getCycle(@Param('id') id: number) {
     try {
@@ -29,15 +44,6 @@ export class CyclesController {
         return cycle;
       } catch (error) {
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
-      }  
-  }
-
-  @Get()
-  async getAllCycles() {
-    try {
-        return await this.cyclesService.getAllCycles();
-      } catch (error) {
-        throw new HttpException('Error retrieving cycles', HttpStatus.INTERNAL_SERVER_ERROR);
       }  
   }
 

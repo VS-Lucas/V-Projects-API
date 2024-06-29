@@ -35,7 +35,7 @@ export class SelfAssesmentService {
         data: {
           selfAssessment: {
             connect: {
-              id: score.selfAssessmentId
+              id: selfAssesment.id
             }
           },
           criterion: {

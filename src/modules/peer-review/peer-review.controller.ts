@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PeerReviewService } from './peer-review.service';
 import { RegisterPeerReviewDto } from './dto/register-peer-review.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Peer Reviews")
-@Controller('peer-review')
+@Controller('api/peer-review')
 export class PeerReviewController {
 
     constructor(private readonly peerReviewService: PeerReviewService) {}
@@ -25,7 +25,8 @@ export class PeerReviewController {
 
     };
 
-    @Put('register/:idEvaluator/:idCycle')
+    @Post('register/:idEvaluator/:idCycle')
+    @ApiCreatedResponse({type: [RegisterPeerReviewDto]})
     async registerPeerReview(
       @Param('idEvaluator') idEvaluator: number, 
       @Param('idCycle') idCycle: number,

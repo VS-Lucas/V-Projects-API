@@ -9,6 +9,8 @@ import { SelfAssesmentModule } from './modules/self-assesment/self-assesment.mod
 import {HistoryModule} from './modules/history/history.module';
 import { PeerReviewModule } from './modules/peer-review/peer-review.module';
 import { EqualizationModule } from './modules/equalization/equalization.module';
+import { RegisterPeerReviewDto } from './modules/peer-review/dto/register-peer-review.dto';
+import { PeerReviewScoreDto } from './modules/peer-review/dto/peer-review-score.dto';
 
 
 @Module({
@@ -19,7 +21,9 @@ import { EqualizationModule } from './modules/equalization/equalization.module';
     SelfAssesmentModule,
     HistoryModule,
     PeerReviewModule,
-    EqualizationModule
+    EqualizationModule, 
+    RegisterPeerReviewDto, 
+    PeerReviewScoreDto
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
