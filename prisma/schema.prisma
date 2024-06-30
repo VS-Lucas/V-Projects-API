@@ -36,11 +36,11 @@ model Address {
 }
 
 model Criterion {
-  id                  Int                   @default(autoincrement()) @id
-  name                String
-  type                String
+  id                   Int                   @default(autoincrement()) @id
+  name                 String
+  type                 String
   SelfAssessmentScores SelfAssessmentScore[]
-  EqualizationScore                         EqualizationScore[]
+  EqualizationScore    EqualizationScore[]
 }
 
 model SelfAssessment {
@@ -70,6 +70,7 @@ model Cycle {
   name             String
   startDate        DateTime
   endDate          DateTime
+  status           Boolean   @default(true)
   SelfAssessments  SelfAssessment[]
   PeerReviews      PeerReview[]
   Equalizations    Equalization[]
@@ -97,18 +98,29 @@ model PeerReviewScore {
   toPraise       String  
 }
 
+model CycleEqualization {
+  id               Int              @default(autoincrement()) @id
+  name             String
+  startDate        DateTime
+  endDate          DateTime
+  status           Boolean   @default(true)
+  Equalizations    Equalization[]
+}
+
 model Equalization {
-  id             Int      @default(autoincrement()) @id
-  evaluator      User     @relation("EqualizationsGiven", fields: [evaluatorId], references: [id])
+  id             Int         @default(autoincrement()) @id
+  evaluator      User        @relation("EqualizationsGiven", fields: [evaluatorId], references: [id])
   evaluatorId    Int
-  evaluated      User     @relation("EqualizationsReceived", fields: [evaluatedId], references: [id])
+  evaluated      User        @relation("EqualizationsReceived", fields: [evaluatedId], references: [id])
   evaluatedId    Int
-  cycle          Cycle    @relation(fields: [cycleId], references: [id])
+  cycle          Cycle       @relation(fields: [cycleId], references: [id])
   cycleId        Int
+  cycleEqualization          CycleEqualization    @relation(fields: [cycleEqualizationId], references: [id])
+  cycleEqualizationId        Int
   date           DateTime
-  status         Boolean   @default(false)
+  status         Boolean     @default(false)
   finalGrade     Float
-  EqualizationScore       EqualizationScore[]
+  EqualizationScore          EqualizationScore[]
 }
 
 model EqualizationScore {
