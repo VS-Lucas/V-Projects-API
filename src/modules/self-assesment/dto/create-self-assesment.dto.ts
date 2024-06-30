@@ -12,6 +12,9 @@ export class CreateSelfAssesmentDto {
     @IsNotEmpty()
     cycleId: number;
 
+    @ApiProperty()
+    status?: boolean;
+
     @ApiProperty({ type: [SelfAssesmentScores] })
     @IsNotEmpty()
     @ValidateNested({ each: true })

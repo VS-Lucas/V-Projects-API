@@ -80,6 +80,32 @@ export class CyclesService {
     }
   }
 
+  async getCurrentCycle(): Promise<CreatedCycleDto> {
+    const currentDate = new Date();
+
+    const currentCycle = await this.prisma.cycle.findFirst({
+      where: {
+        startDate: {
+          lte: currentDate,
+        },
+        endDate: {
+          gte: currentDate,
+        },
+      },
+    });
+
+    if (!currentCycle) {
+      throw new NotFoundException('No active cycle found');
+    }
+
+    return {
+      id: currentCycle.id,
+      name: currentCycle.name,
+      startDate: String(currentCycle.startDate),
+      endDate: String(currentCycle.endDate)
+    };
+  }
+
   async deleteCycleById(id: number) {
      try {
       const cycle = await this.prisma.cycle.findUnique({
