@@ -11,6 +11,8 @@ import { PeerReviewModule } from './modules/peer-review/peer-review.module';
 import { EqualizationModule } from './modules/equalization/equalization.module';
 import { RegisterPeerReviewDto } from './modules/peer-review/dto/register-peer-review.dto';
 import { PeerReviewScoreDto } from './modules/peer-review/dto/peer-review-score.dto';
+import { CyclesEqualizationModule } from './modules/cycles-equalization/cycles-equalization.module';
+import { CyclesEqualizationService } from './modules/cycles-equalization/cycles-equalization.service';
 
 
 @Module({
@@ -23,10 +25,10 @@ import { PeerReviewScoreDto } from './modules/peer-review/dto/peer-review-score.
     PeerReviewModule,
     EqualizationModule, 
     RegisterPeerReviewDto, 
-    PeerReviewScoreDto
+    PeerReviewScoreDto, CyclesEqualizationModule
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, CyclesEqualizationService],
   exports: [PrismaService],
 })
 export class AppModule { }

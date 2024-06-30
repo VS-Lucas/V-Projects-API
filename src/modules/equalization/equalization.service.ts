@@ -41,6 +41,11 @@ export class EqualizationService {
             id: createEqualizationDto.cycleId
           }
         },
+        cycleEqualization: {
+          connect: {
+            id: createEqualizationDto.cycleId
+          }
+        },
         date: new Date(),
         finalGrade: 0
       },
