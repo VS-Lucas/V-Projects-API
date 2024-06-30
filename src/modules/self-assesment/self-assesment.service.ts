@@ -1,3 +1,4 @@
+import { CyclesService } from './../cycles/cycles.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSelfAssesmentDto } from './dto/create-self-assesment.dto';
 import { PrismaService } from 'src/database/prisma.service';
@@ -6,7 +7,10 @@ import { UpdateSelfAssesmentDto } from './dto/update-self-assesment.dto';
 @Injectable()
 export class SelfAssesmentService {
 
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readonly CyclesService: CyclesService
+  ) { }
 
   async create(createSelfAssesmentDto: CreateSelfAssesmentDto) {
     const selfAssesment = await this.prisma.selfAssessment.create({
@@ -143,5 +147,21 @@ export class SelfAssesmentService {
       }
     });
     return selfAssessments;
+  }
+
+  async findSelfAsessmentIdByUserId(userId: number) {
+    const currentCycle = await this.CyclesService.getCurrentCycle();
+    const selfAssessment = await this.prisma.selfAssessment.findFirst({
+      where: {
+        userId: userId,
+        cycleId: currentCycle.id
+      }
+    });
+
+    if (!selfAssessment) {
+      throw new NotFoundException(`Self assessment for user ${userId} in cycle ${currentCycle.id} not found`);
+    }
+
+    return selfAssessment.id;
   }
 }

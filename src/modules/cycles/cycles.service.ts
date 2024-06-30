@@ -88,6 +88,10 @@ export class CyclesService {
       },
     });
 
+    if (!currentCycle) {
+      throw new NotFoundException('No active cycle found');
+    }
+
     return {
       id: currentCycle.id,
       name: currentCycle.name,
