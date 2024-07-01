@@ -17,6 +17,5 @@ export class SelfAssesmentScores {
 
     @ApiProperty()
     @IsString()
-    @IsNotEmpty()
     justification: string;
 }
