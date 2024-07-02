@@ -71,6 +71,7 @@ model Cycle {
   startDate        DateTime
   endDate          DateTime
   status           Boolean   @default(true)
+  finalGrade       Float @default (0.0)
   SelfAssessments  SelfAssessment[]
   PeerReviews      PeerReview[]
   Equalizations    Equalization[]
@@ -104,6 +105,7 @@ model CycleEqualization {
   startDate        DateTime
   endDate          DateTime
   status           Boolean   @default(true)
+  finalGrade       Float @default (0.0)
   Equalizations    Equalization[]
 }
 
