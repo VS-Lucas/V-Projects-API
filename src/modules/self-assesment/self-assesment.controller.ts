@@ -35,4 +35,9 @@ export class SelfAssesmentController {
   update(@Param('id') id: string, @Body() updateSelfAssesmentDto: UpdateSelfAssesmentDto) {
     return this.selfAssesmentService.update(+id, updateSelfAssesmentDto);
   }
+
+  @Get('/user/:userId')
+  findByUserId(@Param('userId') userId: string) {
+    return this.selfAssesmentService.findSelfAsessmentIdByUserId(+userId);
+  }
 }

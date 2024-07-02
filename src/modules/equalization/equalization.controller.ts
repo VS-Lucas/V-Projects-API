@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { EqualizationService } from './equalization.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -48,6 +48,11 @@ export class EqualizationController {
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateEqualizationDto: any) {
         return this.equalizationService.editEqualization(+id, updateEqualizationDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.equalizationService.deleteEqualization(+id);
     }
 
 }

@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { CyclesService } from './../cycles/cycles.service';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateSelfAssesmentDto } from './dto/create-self-assesment.dto';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateSelfAssesmentDto } from './dto/update-self-assesment.dto';
@@ -6,7 +7,10 @@ import { UpdateSelfAssesmentDto } from './dto/update-self-assesment.dto';
 @Injectable()
 export class SelfAssesmentService {
 
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readonly CyclesService: CyclesService
+  ) { }
 
   async create(createSelfAssesmentDto: CreateSelfAssesmentDto) {
     const selfAssesment = await this.prisma.selfAssessment.create({
@@ -127,6 +131,45 @@ export class SelfAssesmentService {
         meanGrade: meanGrade
       }
     })
+    }
+  }
+
+  async findByUserIdAndCycle(userId: number, cycleId: number) {
+    const selfAssessments = await this.prisma.selfAssessment.findMany({
+      where: {
+        userId: userId,
+        cycleId: cycleId
+      },
+      include: {
+        user: true,
+        cycle: true,
+        SelfAssessmentScores: true
+      }
+    });
+    return selfAssessments;
+  }
+
+  async findSelfAsessmentIdByUserId(userId: number) {
+
+    try {
+      const currentCycle = await this.CyclesService.getCurrentCycle();
+      const selfAssessment = await this.prisma.selfAssessment.findFirst({
+        where: {
+          userId: userId,
+          cycleId: currentCycle.id
+        }
+      });
+
+      if (!selfAssessment) {
+        
+        console.log(`Self assessment for user ${userId} in cycle ${currentCycle.id} not found`);
+        return 0;
+      }
+
+      return selfAssessment.id;
+    } catch (error) {
+        throw new InternalServerErrorException('Something went wrong while finding the self-assessment');
+        
     }
   }
 }

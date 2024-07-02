@@ -19,6 +19,14 @@ export class CreateEqualizationDto {
   @ApiProperty()
   cycleId: number;
 
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  cycleEqualizationId: number;
+
+  @ApiProperty()
+  status?: boolean;
+
   @IsISO8601()
   @IsNotEmpty()
   @ApiProperty()
