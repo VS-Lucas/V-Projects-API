@@ -73,6 +73,8 @@ export class PeerReviewService {
 
             const isFinished = this.isFinished(review)
 
+            console.log(isFinished)
+        
             if (!existingReview) {
                 await this.createPeerReview(review, isFinished);
 
@@ -259,16 +261,16 @@ export class PeerReviewService {
         return missingReviews;
     }
 
-    async isFinished(review: RegisterPeerReviewDto) {
+    isFinished(review: RegisterPeerReviewDto){
 
-        if (review.assessment.behavior == null || review.assessment.tecniques == null || review.assessment.toImprove == null ||
-            review.assessment.toPraise == null) {
+        if (review.assessment.behavior == null || review.assessment.tecniques == null || review.assessment.toImprove == "" ||
+            review.assessment.toPraise == "") {
 
-                return true; 
+                return false; 
 
             }else {
 
-                return false 
+                return true;
 
             }
         

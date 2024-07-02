@@ -6,9 +6,9 @@ import { AuthenticationGuard } from 'src/guards/authentication.guard';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import { Role } from 'src/decorators/role.decorator';
 
-@Role('COLABORADOR')
-@ApiBearerAuth()
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+// @Role('COLABORADOR')
+// @ApiBearerAuth()
+// @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("Peer Reviews")
 @Controller('api/peer-review')
 export class PeerReviewController {

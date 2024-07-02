@@ -86,7 +86,7 @@ model PeerReview {
   cycle             Cycle          @relation(fields: [cycleId], references: [id])
   cycleId           Int
   meanGrade         Float
-  isFinished        Boolean   @default(true)
+  isFinished        Boolean   @default(false)
   PeerReviewScores  PeerReviewScore?
 }
 
