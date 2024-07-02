@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
 export class CreatedCycleEqualizationDto {
   @ApiProperty()
@@ -12,4 +13,8 @@ export class CreatedCycleEqualizationDto {
 
   @ApiProperty()
   endDate: string;
+
+  @IsOptional()
+  @ApiProperty()
+  finalGrade?: number;
 }

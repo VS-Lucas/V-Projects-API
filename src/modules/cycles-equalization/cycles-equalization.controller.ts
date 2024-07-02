@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { CyclesEqualizationService } from './cycles-equalization.service';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCycleEqualizationDto } from './dto/create.cycleEqualization.dto';
@@ -27,6 +27,15 @@ export class CyclesEqualizationController {
           return await this.cyclesEqualizationService.getAllCycleEqualizations();
         } catch (error) {
           throw new HttpException('Error retrieving cycles', HttpStatus.INTERNAL_SERVER_ERROR);
+        }  
+    }
+
+    @Patch(':id')
+    async update(@Param('id') id: number, @Body() createdCycleEqualizationDto: CreatedCycleEqualizationDto) {
+      try {
+          return await this.cyclesEqualizationService.updateCycleEqualization(id, createdCycleEqualizationDto);
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.CONFLICT);
         }  
     }
 }
