@@ -1,8 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { PeerReviewService } from './peer-review.service';
 import { RegisterPeerReviewDto } from './dto/register-peer-review.dto';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { AuthenticationGuard } from 'src/guards/authentication.guard';
+import { AuthorizationGuard } from 'src/guards/authorization.guard';
+import { Role } from 'src/decorators/role.decorator';
 
+@Role('COLABORADOR')
+@ApiBearerAuth()
+@UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("Peer Reviews")
 @Controller('api/peer-review')
 export class PeerReviewController {
