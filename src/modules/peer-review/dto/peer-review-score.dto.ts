@@ -4,26 +4,26 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class PeerReviewScoreDto {
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     @IsNumber()
     idReview: number;
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     @IsString()
     behavior: number; 
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     @IsString()
     tecniques: number; 
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     toImprove: string; 
 
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     @IsNumber()
     toPraise: string;
 

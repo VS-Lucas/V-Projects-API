@@ -71,16 +71,19 @@ export class PeerReviewService {
 
             const existingReview = await this.reviewExist(review.evaluatorId, review.evaluatedId, review.cycleId);
 
+            const isFinished = this.isFinished(review)
+
             if (!existingReview) {
-                await this.createPeerReview(review);
+                await this.createPeerReview(review, isFinished);
+
             } else {
                 const peerReviewScoreId = existingReview.PeerReviewScores ? existingReview.PeerReviewScores.id : null;
-                await this.updatePeerReview(existingReview.id, peerReviewScoreId, review);
+                await this.updatePeerReview(existingReview.id, peerReviewScoreId, review, isFinished);
             }
         }
     }
 
-    async createPeerReview(registerPeerReview: RegisterPeerReviewDto) {
+    async createPeerReview(registerPeerReview: RegisterPeerReviewDto, isFinished) {
         const evaluatorExists = await this.prisma.user.findUnique({
             where: { id: registerPeerReview.evaluatorId },
         });
@@ -123,6 +126,8 @@ export class PeerReviewService {
                     },
                 },
                 meanGrade: (registerPeerReview.assessment.behavior + registerPeerReview.assessment.tecniques) / 2,
+                isFinished: isFinished
+                
             },
         });
 
@@ -141,7 +146,7 @@ export class PeerReviewService {
         });
     }
 
-    async updatePeerReview(idPeerReview: number, idScore: number | null, registerPeerReview: RegisterPeerReviewDto) {
+    async updatePeerReview(idPeerReview: number, idScore: number | null, registerPeerReview: RegisterPeerReviewDto, isFinished) {
         const peerReviewExists = await this.prisma.peerReview.findUnique({
             where: { id: idPeerReview },
         });
@@ -156,6 +161,7 @@ export class PeerReviewService {
             },
             data: {
                 meanGrade: (registerPeerReview.assessment.behavior + registerPeerReview.assessment.tecniques) / 2,
+                isFinished: isFinished
             },
         });
 
@@ -252,5 +258,21 @@ export class PeerReviewService {
     
         return missingReviews;
     }
+
+    async isFinished(review: RegisterPeerReviewDto) {
+
+        if (review.assessment.behavior == null || review.assessment.tecniques == null || review.assessment.toImprove == null ||
+            review.assessment.toPraise == null) {
+
+                return true; 
+
+            }else {
+
+                return false 
+
+            }
+        
+
+    };
     
 }
