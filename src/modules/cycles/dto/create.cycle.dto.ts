@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNotEmpty, IsISO8601 } from "class-validator";
+import { IsString, IsNotEmpty, IsISO8601, IsOptional } from "class-validator";
 
 export class CreateCycleDto {
     @IsString()
@@ -16,4 +16,8 @@ export class CreateCycleDto {
     @IsNotEmpty()
     @ApiProperty()
     endDate: string;
+
+    @IsOptional()
+    @ApiProperty()
+    finalGrade?: number;
 }

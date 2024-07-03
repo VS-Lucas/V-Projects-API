@@ -35,6 +35,7 @@ export class CyclesService {
         name: data.name,
         startDate: new Date(data.startDate),
         endDate: new Date(data.endDate),
+        finalGrade: data.finalGrade ?? 0.0,
       },
       });
   
@@ -43,6 +44,7 @@ export class CyclesService {
         name: cycle.name,
         startDate: cycle.startDate.toISOString(),
         endDate: cycle.endDate.toISOString(),
+        finalGrade: cycle.finalGrade,
       };
     } catch (error) {
       throw new InternalServerErrorException('Something went wrong while creating the cycle');
@@ -128,6 +130,60 @@ export class CyclesService {
       
       throw new InternalServerErrorException('Something went wrong while deleting the cycle');
     }  
+  }
+
+  async updateCycle(id: number, data: CreatedCycleDto) {
+    try {
+      const existingCycle = await this.prisma.cycle.findFirst({
+        where: {
+          id: data.id
+        }
+      });
+
+      if (!existingCycle) {
+        throw new ConflictException('A cycle does not exist for this id');   
+      }
+      else if (existingCycle.name !== data.name) {
+        throw new ConflictException('A cycle already exists for this name');   
+      }
+
+      const existingDateCycle = await this.prisma.cycle.findFirst({
+        where: {
+          startDate: new Date(data.startDate),
+          endDate: new Date(data.endDate),
+        }
+      });
+
+      if (existingDateCycle) {
+        throw new ConflictException('A cycle already exists with the same date range');
+      }
+
+      const cycle = await this.prisma.cycle.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: data.name,
+          startDate: new Date(data.startDate),
+          endDate: new Date(data.endDate),
+          finalGrade: data.finalGrade,
+        },
+      });
+
+      return {
+        id: cycle.id,
+        name: cycle.name,
+        startDate: cycle.startDate.toISOString(),
+        endDate: cycle.endDate.toISOString(),
+        finalGrade: cycle.finalGrade,
+      };
+    } catch (error) {
+
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Something went wrong while updating the cycle');
+    }
   }
   
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpException, HttpStatus, Patch } from '@nestjs/common';
 import { CyclesService } from './cycles.service';
 import { CreateCycleDto } from './dto/create.cycle.dto';
 import { CreatedCycleDto } from './dto/created.cycle.dto';
@@ -55,5 +55,14 @@ export class CyclesController {
       } catch (error) {
         throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
       }
+  }
+
+  @Patch(':id')
+  async updateCycle(@Param('id') id: number, @Body() createdCycleDto: CreatedCycleDto) {
+    try {
+        return await this.cyclesService.updateCycle(id, createdCycleDto);
+      } catch (error) {
+        throw new HttpException(error.message, HttpStatus.CONFLICT);
+      }  
   }
 }

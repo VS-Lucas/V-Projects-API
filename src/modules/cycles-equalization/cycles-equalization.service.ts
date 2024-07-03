@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateCycleEqualizationDto } from './dto/create.cycleEqualization.dto';
+import { CreatedCycleEqualizationDto } from './dto/created.cycleEqualization.dto';
 
 @Injectable()
 export class CyclesEqualizationService {
@@ -50,6 +51,7 @@ export class CyclesEqualizationService {
                     name: data.name,
                     startDate: new Date(data.startDate),
                     endDate: new Date(data.endDate),
+                    finalGrade: data.finalGrade ?? 0.0,
                 },
             });
 
@@ -58,6 +60,7 @@ export class CyclesEqualizationService {
                 name: cycleEqualization.name,
                 startDate: cycleEqualization.startDate.toISOString(),
                 endDate: cycleEqualization.endDate.toISOString(),
+                finalGrade: cycleEqualization.finalGrade,
             };
         } catch (error) {
             if (error instanceof ConflictException) {
@@ -80,12 +83,7 @@ export class CyclesEqualizationService {
                 throw new NotFoundException('Cycle equalization not found');
             }
 
-            return {
-                id: cycleEqualization.id,
-                name: cycleEqualization.name,
-                startDate: cycleEqualization.startDate.toISOString(),
-                endDate: cycleEqualization.endDate.toISOString(),
-            };
+            return cycleEqualization;
         } catch (error) {
             throw new InternalServerErrorException('Something went wrong while fetching the cycle equalization');
         }
@@ -102,4 +100,58 @@ export class CyclesEqualizationService {
             throw new InternalServerErrorException('Something went wrong while fetching the cycle equalizations');
         }
     }
+
+    async updateCycleEqualization(id: number, data: CreatedCycleEqualizationDto) {
+        try {
+          const existingCycle = await this.prisma.cycleEqualization.findFirst({
+            where: {
+              id: data.id
+            }
+          });
+    
+          if (!existingCycle) {
+            throw new ConflictException('A cycle does not exist for this id');   
+          }
+          else if (existingCycle.name !== data.name) {
+            throw new ConflictException('A cycle already exists for this name');   
+          }
+    
+          const existingDateCycle = await this.prisma.cycleEqualization.findFirst({
+            where: {
+              startDate: new Date(data.startDate),
+              endDate: new Date(data.endDate),
+            }
+          });
+    
+          if (existingDateCycle) {
+            throw new ConflictException('A cycle already exists with the same date range');
+          }
+    
+          const cycle = await this.prisma.cycleEqualization.update({
+            where: {
+              id: id,
+            },
+            data: {
+              name: data.name,
+              startDate: new Date(data.startDate),
+              endDate: new Date(data.endDate),
+              finalGrade: data.finalGrade,
+            },
+          });
+    
+          return {
+            id: cycle.id,
+            name: cycle.name,
+            startDate: cycle.startDate.toISOString(),
+            endDate: cycle.endDate.toISOString(),
+            finalGrade: cycle.finalGrade,
+          };
+        } catch (error) {
+    
+          if (error instanceof ConflictException) {
+            throw error;
+          }
+          throw new InternalServerErrorException('Something went wrong while updating the cycle');
+        }
+      }
 }
