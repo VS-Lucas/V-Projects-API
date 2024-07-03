@@ -22,7 +22,7 @@ export class RegisterPeerReviewDto {
 
     @ApiProperty()
     @IsBoolean()
-    status: boolean;
+    isFinished: boolean;
 
     @ApiProperty({ type: PeerReviewScoreDto })
     @IsNotEmpty()

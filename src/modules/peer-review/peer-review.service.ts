@@ -71,16 +71,18 @@ export class PeerReviewService {
 
             const existingReview = await this.reviewExist(review.evaluatorId, review.evaluatedId, review.cycleId);
 
+            const statusVal = this.verifyStatus(review)
+
             if (!existingReview) {
-                await this.createPeerReview(review);
+                await this.createPeerReview(review, statusVal);
             } else {
                 const peerReviewScoreId = existingReview.PeerReviewScores ? existingReview.PeerReviewScores.id : null;
-                await this.updatePeerReview(existingReview.id, peerReviewScoreId, review);
+                await this.updatePeerReview(existingReview.id, peerReviewScoreId, review, statusVal);
             }
         }
     }
 
-    async createPeerReview(registerPeerReview: RegisterPeerReviewDto) {
+    async createPeerReview(registerPeerReview: RegisterPeerReviewDto, statusVal: boolean) {
         const evaluatorExists = await this.prisma.user.findUnique({
             where: { id: registerPeerReview.evaluatorId },
         });
@@ -123,6 +125,7 @@ export class PeerReviewService {
                     },
                 },
                 meanGrade: (registerPeerReview.assessment.behavior + registerPeerReview.assessment.tecniques) / 2,
+                isFinished: statusVal,
             },
         });
 
@@ -141,7 +144,7 @@ export class PeerReviewService {
         });
     }
 
-    async updatePeerReview(idPeerReview: number, idScore: number | null, registerPeerReview: RegisterPeerReviewDto) {
+    async updatePeerReview(idPeerReview: number, idScore: number | null, registerPeerReview: RegisterPeerReviewDto, resultVal: boolean) {
         const peerReviewExists = await this.prisma.peerReview.findUnique({
             where: { id: idPeerReview },
         });
@@ -156,6 +159,7 @@ export class PeerReviewService {
             },
             data: {
                 meanGrade: (registerPeerReview.assessment.behavior + registerPeerReview.assessment.tecniques) / 2,
+                isFinished: resultVal,
             },
         });
 
@@ -251,6 +255,21 @@ export class PeerReviewService {
         });
     
         return missingReviews;
+    }
+
+    verifyStatus(review: RegisterPeerReviewDto) {
+
+
+        if (review.assessment.behavior == null || review.assessment.tecniques == null || review.assessment.toImprove == "" || review.assessment.toPraise == ""){
+
+            return false;
+
+        }else {
+
+            return true;
+
+        }
+
     }
     
 }

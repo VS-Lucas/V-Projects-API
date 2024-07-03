@@ -3,8 +3,6 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class PeerReviewScoreDto {
 
-
-
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
