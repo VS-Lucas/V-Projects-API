@@ -34,6 +34,7 @@ export class AuthService {
                 name: user.name,
                 role: user.role,
                 position: user.position,
+                profilePhoto: user.profilePhoto,
                 address: user.address,
             }
         }

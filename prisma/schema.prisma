@@ -16,6 +16,7 @@ model User {
   role                String    @default("COLABORADOR")
   address             Address?  @relation
   position            String?  
+  profilePhoto        String
   SelfAssessments     SelfAssessment[]
   PeerReviewsGiven    PeerReview[] @relation("PeerReviewsGiven")
   PeerReviewsReceived PeerReview[] @relation("PeerReviewsReceived")

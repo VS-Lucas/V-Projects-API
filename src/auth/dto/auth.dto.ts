@@ -17,6 +17,9 @@ class UserDto {
     @ApiProperty()
     position: string;
 
+    @ApiProperty()
+    profilePhoto: string;
+
     @ApiProperty({ type: Address })
     address: Address;
 }

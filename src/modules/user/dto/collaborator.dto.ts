@@ -15,4 +15,7 @@ export class Collaborator {
 
     @ApiProperty()
     position: string;
+
+    @ApiProperty()
+    profilePhoto: string
 }
