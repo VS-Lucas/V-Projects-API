@@ -16,6 +16,15 @@ export class PeerReviewController {
 
     };
 
+    @Get('peer-review-evaluated/:idEvaluated/:idCycle')
+    async getEvaluatedPeerReviews(
+        @Param('idEvaluated') idEvaluated: number, 
+        @Param('idCycle') idCycle: number) {
+
+        return this.peerReviewService.getPeerReviewsByEvaluatedId(+idEvaluated, +idCycle); 
+
+    };
+
     @Get(':idEvaluator/:idCycle')
     async getAllPeerReviews(
         @Param('idEvaluator') idEvaluator: number, 
