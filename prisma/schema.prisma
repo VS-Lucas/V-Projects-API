@@ -16,6 +16,7 @@ model User {
   role                String    @default("COLABORADOR")
   address             Address?  @relation
   position            String?  
+  profilePhoto        String
   SelfAssessments     SelfAssessment[]
   PeerReviewsGiven    PeerReview[] @relation("PeerReviewsGiven")
   PeerReviewsReceived PeerReview[] @relation("PeerReviewsReceived")
@@ -70,8 +71,8 @@ model Cycle {
   name             String
   startDate        DateTime
   endDate          DateTime
-  status           Boolean   @default(true)
-  finalGrade       Float @default (0.0)
+  status           Boolean          @default(true)
+  finalGrade       Float            @default (0.0)
   SelfAssessments  SelfAssessment[]
   PeerReviews      PeerReview[]
   Equalizations    Equalization[]
@@ -105,8 +106,8 @@ model CycleEqualization {
   name             String
   startDate        DateTime
   endDate          DateTime
-  status           Boolean   @default(true)
-  finalGrade       Float @default (0.0)
+  status           Boolean          @default(true)
+  finalGrade       Float            @default (0.0)
   Equalizations    Equalization[]
 }
 
