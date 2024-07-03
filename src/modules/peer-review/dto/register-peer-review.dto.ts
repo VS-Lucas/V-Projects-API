@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { PeerReviewScoreDto } from "./peer-review-score.dto";
 
@@ -19,6 +19,10 @@ export class RegisterPeerReviewDto {
     @IsNotEmpty()
     @IsNumber()
     cycleId: number; 
+
+    @ApiProperty()
+    @IsBoolean()
+    status: boolean;
 
     @ApiProperty({ type: PeerReviewScoreDto })
     @IsNotEmpty()
