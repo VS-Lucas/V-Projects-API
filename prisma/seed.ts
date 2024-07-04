@@ -19,18 +19,21 @@ async function main() {
       name: 'Vinícius',
       password: hashedPassword1,
       role: 'COLABORADOR',
-      position: 'Developer',
+      position: 'Desenvolvedor',
       profilePhoto: 'https://randomuser.me/api/portraits/men/35.jpg',
       address: {
         create: {
-          street: '123 Main St',
-          district: 'Downtown',
-          city: 'Cityville',
-          state: 'Stateville',
-          country: 'Countryland',
-          number: '1',
+          street: 'Av. Rocket Lab',
+          district: 'Centro',
+          city: 'Recife',
+          state: 'PE',
+          country: 'Brasil',
+          number: '999',
         },
       },
+      phoneNumber: '+55 (81) 99999-1111',
+      birthDate: new Date('1990-01-01'),
+      sector: 'TI',
     },
     {
       email: 'ana@example.com',
@@ -41,88 +44,104 @@ async function main() {
       profilePhoto: 'https://randomuser.me/api/portraits/women/60.jpg',
       address: {
         create: {
-          street: '456 Side St',
-          district: 'Uptown',
-          city: 'Cityville',
-          state: 'Stateville',
-          country: 'Countryland',
-          number: '2',
+          street: 'Av. Rocket Lab',
+          district: 'Centro',
+          city: 'Recife',
+          state: 'PE',
+          country: 'Brasil',
+          number: '999',
         },
       },
+      phoneNumber: '+55 (81) 99999-2222',
+      birthDate: new Date('1992-05-15'),
+      sector: 'Design',
     },
     {
       email: 'eric@example.com',
       name: 'Eric',
       password: hashedPassword3,
       role: 'COLABORADOR',
-      position: 'Manager',
+      position: 'Gerente',
       profilePhoto: 'https://randomuser.me/api/portraits/men/36.jpg',
       address: {
         create: {
-          street: '789 Another St',
-          district: 'Suburbia',
-          city: 'Cityville',
-          state: 'Stateville',
-          country: 'Countryland',
-          number: '3',
+          street: 'Av. Rocket Lab',
+          district: 'Centro',
+          city: 'Recife',
+          state: 'PE',
+          country: 'Brasil',
+          number: '999',
         },
       },
+      phoneNumber: '+55 (81) 99999-3333',
+      birthDate: new Date('1985-09-20'),
+      sector: 'Gerência',
     },
     {
       email: 'breno@example.com',
       name: 'Breno',
       password: hashedPassword4,
       role: 'COLABORADOR',
-      position: 'QA Engineer',
+      position: 'Engenheiro de QA',
       profilePhoto: 'https://randomuser.me/api/portraits/men/37.jpg',
       address: {
         create: {
-          street: '1011 Last St',
-          district: 'Downtown',
-          city: 'Cityville',
-          state: 'Stateville',
-          country: 'Countryland',
-          number: '4',
+          street: 'Av. Rocket Lab',
+          district: 'Centro',
+          city: 'Recife',
+          state: 'PE',
+          country: 'Brasil',
+          number: '999',
         },
       },
+      phoneNumber: '+55 (81) 99999-4444',
+      birthDate: new Date('1988-11-12'),
+      sector: 'QA',
     },
     {
       email: 'lucas@example.com',
       name: 'Lucas',
       password: hashedPassword5,
       role: 'COLABORADOR',
-      position: 'Student',
+      position: 'Estudante',
       profilePhoto: 'https://randomuser.me/api/portraits/men/39.jpg',
       address: {
         create: {
-          street: '1011 Last St',
-          district: 'Downtown',
-          city: 'Cityville',
-          state: 'Stateville',
-          country: 'Countryland',
-          number: '4',
+          street: 'Av. Rocket Lab',
+          district: 'Centro',
+          city: 'Recife',
+          state: 'PE',
+          country: 'Brasil',
+          number: '999',
         },
       },
+      phoneNumber: '+55 (81) 99999-5555',
+      birthDate: new Date('1995-04-30'),
+      sector: 'Educação',
     },
     {
       email: 'admin@example.com',
-      name: 'Admin User',
+      name: 'Usuário Admin',
       password: hashedPasswordAdmin,
       role: 'SOCIO',
-      position: 'Admin',
+      position: 'Administração',
       profilePhoto: 'https://randomuser.me/api/portraits/women/40.jpg',
       address: {
         create: {
-          street: '1213 Final St',
-          district: 'Midtown',
-          city: 'Cityville',
-          state: 'Stateville',
-          country: 'Countryland',
-          number: '5',
+          street: 'Av. Rocket Lab',
+          district: 'Centro',
+          city: 'Recife',
+          state: 'PE',
+          country: 'Brasil',
+          number: '999',
         },
       },
+      phoneNumber: '+55 (81) 99999-6666',
+      birthDate: new Date('1980-03-25'),
+      sector: 'Administração',
     },
   ];
+
 
   const users = await Promise.all(
     usersData.map(user => prisma.user.create({ data: user }))
@@ -257,14 +276,42 @@ async function main() {
 //       evaluatedId: users[0].id,
 //       cycleId: cycle.id,
 //       date: new Date(),
-//       finalGrade: 4.3,
+//       meanGrade: 4.6,
+//       EqualizationScores: {
+//         create: [
+//           {
+//             criterionId: 1,
+//             grade: 4.5,
+//             justification: 'Maintained high standards.',
+//           },
+//           {
+//             criterionId: 2,
+//             grade: 4.7,
+//             justification: 'Improved resilience.',
+//           },
+//         ],
+//       },
 //     },
 //     {
 //       evaluatorId: users[5].id,  // Admin user
 //       evaluatedId: users[1].id,
 //       cycleId: cycle.id,
 //       date: new Date(),
-//       finalGrade: 4.0,
+//       meanGrade: 4.1,
+//       EqualizationScores: {
+//         create: [
+//           {
+//             criterionId: 3,
+//             grade: 4.2,
+//             justification: 'Consistent organizational skills.',
+//           },
+//           {
+//             criterionId: 4,
+//             grade: 4.0,
+//             justification: 'Good learning curve.',
+//           },
+//         ],
+//       },
 //     },
 //   ];
 
@@ -272,14 +319,14 @@ async function main() {
 //     equalizationsData.map(equalization => prisma.equalization.create({ data: equalization }))
 //   );
 
-//   console.log({ users, criteria, cycle, selfAssessments, peerReviews, equalizations });
+  console.log({ users, criteria, cycle, selfAssessments /* , peerReviews, equalizations */ });
 }
 
 main()
-  // .catch((e) => {
-  //   console.error(e);
-  //   process.exit(1);
-  // })
-  // .finally(async () => {
-  //   await prisma.$disconnect();
-  // });
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

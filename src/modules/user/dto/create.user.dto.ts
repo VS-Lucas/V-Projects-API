@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsDate, IsEmail, IsNotEmpty, IsString, MinLength, isDate, isNotEmpty } from "class-validator";
 import { Address } from "./address.dto";
 import { Type } from "class-transformer";
 
@@ -40,6 +40,18 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     profilePhoto: string
+
+    @IsString()
+    @IsNotEmpty()
+    phoneNumber:string
+    
+    @IsDate()
+    @IsNotEmpty()
+    birthDate:Date
+
+    @IsString()
+    @IsNotEmpty()
+    sector:string
 
     // @ApiProperty({ type: Address })
     // @IsNotEmpty()
