@@ -104,43 +104,51 @@ export class CyclesEqualizationService {
     async updateCycleEqualization(id: number, data: CreatedCycleEqualizationDto) {
         try {
           const existingCycle = await this.prisma.cycleEqualization.findFirst({
-            where: {
-              id: data.id
-            }
+            where: { id: Number(id) }
           });
-    
+      
           if (!existingCycle) {
-            throw new ConflictException('A cycle does not exist for this id');   
+            throw new ConflictException("A cycle does not exist for this id");
           }
-          else if (existingCycle.name !== data.name) {
-            throw new ConflictException('A cycle already exists for this name');   
+      
+          if (data.name && existingCycle.name !== data.name) {
+            const existingNameCycle = await this.prisma.cycleEqualization.findFirst({
+              where: { name: data.name }
+            });
+            if (existingNameCycle) {
+              throw new ConflictException("A cycle already exists for this name");
+            }
           }
-    
-          const existingDateCycle = await this.prisma.cycleEqualization.findFirst({
-            where: {
-              startDate: new Date(data.startDate),
-              endDate: new Date(data.endDate),
+      
+          if (data.startDate && data.endDate) {
+            const existingDateCycle = await this.prisma.cycleEqualization.findFirst({
+              where: {
+                startDate: new Date(data.startDate),
+                endDate: new Date(data.endDate)
+              }
+            });
+            if (existingDateCycle) {
+              throw new ConflictException("A cycle already exists with the same date range");
+            }
+          }
+      
+          const cycleEqualization = await this.prisma.cycleEqualization.update({
+            where: { id: Number(id) },
+            data: {
+              ...data,
+              startDate: data.startDate ? new Date(data.startDate) : existingCycle.startDate,
+              endDate: data.endDate ? new Date(data.endDate) : existingCycle.endDate
             }
           });
     
-          if (existingDateCycle) {
-            throw new ConflictException('A cycle already exists with the same date range');
-          }
-    
-          const cycle = await this.prisma.cycleEqualization.update({
-            where: {
-              id: id,
-            },
-            data: {
-              name: data.name,
-              startDate: new Date(data.startDate),
-              endDate: new Date(data.endDate),
-              finalGrade: data.finalGrade,
-              status: data.status,
-            },
-          });
-    
-          return cycle;
+          return {
+            id: cycleEqualization.id,
+            name: cycleEqualization.name,
+            startDate: cycleEqualization.startDate.toISOString(),
+            endDate: cycleEqualization.endDate.toISOString(),
+            finalGrade: cycleEqualization.finalGrade,
+            status: cycleEqualization.status,
+          };
         } catch (error) {
     
           if (error instanceof ConflictException) {
