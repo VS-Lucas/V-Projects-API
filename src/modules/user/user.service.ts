@@ -83,7 +83,8 @@ export class UserService {
       name: collaborator.name,
       email: collaborator.email,
       role: collaborator.role,
-      position: collaborator.position
+      position: collaborator.position,
+      profilePhoto: collaborator.profilePhoto
     }));
   }
 }

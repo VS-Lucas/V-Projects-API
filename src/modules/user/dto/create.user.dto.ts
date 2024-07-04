@@ -37,6 +37,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     position: string
 
+    @IsString()
+    @IsNotEmpty()
+    profilePhoto: string
+
     // @ApiProperty({ type: Address })
     // @IsNotEmpty()
     // @Type(() => Address)

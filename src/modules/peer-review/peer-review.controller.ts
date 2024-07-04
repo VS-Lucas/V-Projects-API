@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PeerReviewService } from './peer-review.service';
 import { RegisterPeerReviewDto } from './dto/register-peer-review.dto';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags("Peer Reviews")
 @Controller('api/peer-review')
@@ -16,6 +16,15 @@ export class PeerReviewController {
 
     };
 
+    @Get('peer-review-evaluated/:idEvaluated/:idCycle')
+    async getEvaluatedPeerReviews(
+        @Param('idEvaluated') idEvaluated: number, 
+        @Param('idCycle') idCycle: number) {
+
+        return this.peerReviewService.getPeerReviewsByEvaluatedId(+idEvaluated, +idCycle); 
+
+    };
+
     @Get(':idEvaluator/:idCycle')
     async getAllPeerReviews(
         @Param('idEvaluator') idEvaluator: number, 
@@ -26,7 +35,8 @@ export class PeerReviewController {
     };
 
     @Post('register/:idEvaluator/:idCycle')
-    @ApiCreatedResponse({type: [RegisterPeerReviewDto]})
+    // @ApiCreatedResponse({type: [RegisterPeerReviewDto]})
+    @ApiBody({type: [RegisterPeerReviewDto]})
     async registerPeerReview(
       @Param('idEvaluator') idEvaluator: number, 
       @Param('idCycle') idCycle: number,

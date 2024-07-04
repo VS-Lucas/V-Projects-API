@@ -15,11 +15,12 @@ async function main() {
   // Seed for Users
   const usersData = [
     {
-      email: 'user1@example.com',
-      name: 'User One',
+      email: 'vinicius@example.com',
+      name: 'Vinícius',
       password: hashedPassword1,
       role: 'COLABORADOR',
       position: 'Developer',
+      profilePhoto: 'https://randomuser.me/api/portraits/men/35.jpg',
       address: {
         create: {
           street: '123 Main St',
@@ -32,11 +33,12 @@ async function main() {
       },
     },
     {
-      email: 'user2@example.com',
-      name: 'User Two',
+      email: 'ana@example.com',
+      name: 'Ana',
       password: hashedPassword2,
       role: 'COLABORADOR',
       position: 'Designer',
+      profilePhoto: 'https://randomuser.me/api/portraits/women/60.jpg',
       address: {
         create: {
           street: '456 Side St',
@@ -49,11 +51,12 @@ async function main() {
       },
     },
     {
-      email: 'user3@example.com',
-      name: 'User Three',
+      email: 'eric@example.com',
+      name: 'Eric',
       password: hashedPassword3,
       role: 'COLABORADOR',
       position: 'Manager',
+      profilePhoto: 'https://randomuser.me/api/portraits/men/36.jpg',
       address: {
         create: {
           street: '789 Another St',
@@ -66,11 +69,12 @@ async function main() {
       },
     },
     {
-      email: 'user4@example.com',
-      name: 'User Four',
+      email: 'breno@example.com',
+      name: 'Breno',
       password: hashedPassword4,
       role: 'COLABORADOR',
       position: 'QA Engineer',
+      profilePhoto: 'https://randomuser.me/api/portraits/men/37.jpg',
       address: {
         create: {
           street: '1011 Last St',
@@ -88,6 +92,7 @@ async function main() {
       password: hashedPassword5,
       role: 'COLABORADOR',
       position: 'Student',
+      profilePhoto: 'https://randomuser.me/api/portraits/men/39.jpg',
       address: {
         create: {
           street: '1011 Last St',
@@ -105,6 +110,7 @@ async function main() {
       password: hashedPasswordAdmin,
       role: 'SOCIO',
       position: 'Admin',
+      profilePhoto: 'https://randomuser.me/api/portraits/women/40.jpg',
       address: {
         create: {
           street: '1213 Final St',

@@ -5,11 +5,6 @@ export class PeerReviewScoreDto {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsNumber()
-    idReview: number;
-
-    @ApiProperty()
-    @IsNotEmpty()
     @IsString()
     behavior: number; 
 

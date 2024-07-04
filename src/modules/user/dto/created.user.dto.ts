@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Address } from './address.dto';
 
 export class CreatedUserDto {
     @ApiProperty()
@@ -10,7 +9,4 @@ export class CreatedUserDto {
 
     @ApiProperty()
     role: string;
-    
-    // @ApiProperty()
-    // address: Address
 }

@@ -16,6 +16,7 @@ model User {
   role                String    @default("COLABORADOR")
   address             Address?  @relation
   position            String?  
+  profilePhoto        String
   SelfAssessments     SelfAssessment[]
   PeerReviewsGiven    PeerReview[] @relation("PeerReviewsGiven")
   PeerReviewsReceived PeerReview[] @relation("PeerReviewsReceived")
@@ -86,6 +87,7 @@ model PeerReview {
   cycle             Cycle          @relation(fields: [cycleId], references: [id])
   cycleId           Int
   meanGrade         Float
+  isFinished        Boolean  
   PeerReviewScores  PeerReviewScore?
 }
 
