@@ -134,51 +134,33 @@ export class CyclesService {
 
   async updateCycle(id: number, data: CreatedCycleDto) {
     try {
-      const existingCycle = await this.prisma.cycle.findFirst({
+      const existingCycle = await this.prisma.cycle.findUnique({
         where: {
-          id: data.id
+          id: Number(id),
         }
       });
+
+      console.log(existingCycle);
 
       if (!existingCycle) {
         throw new ConflictException('A cycle does not exist for this id');   
       }
-      else if (existingCycle.name !== data.name) {
-        throw new ConflictException('A cycle already exists for this name');   
-      }
-
-      const existingDateCycle = await this.prisma.cycle.findFirst({
-        where: {
-          startDate: new Date(data.startDate),
-          endDate: new Date(data.endDate),
-        }
-      });
-
-      if (existingDateCycle) {
-        throw new ConflictException('A cycle already exists with the same date range');
-      }
 
       const cycle = await this.prisma.cycle.update({
         where: {
-          id: id,
+          id: Number(id)
         },
         data: {
           name: data.name,
           startDate: new Date(data.startDate),
           endDate: new Date(data.endDate),
           finalGrade: data.finalGrade,
+          status: data.status,
         },
       });
 
-      return {
-        id: cycle.id,
-        name: cycle.name,
-        startDate: cycle.startDate.toISOString(),
-        endDate: cycle.endDate.toISOString(),
-        finalGrade: cycle.finalGrade,
-      };
+      return cycle;
     } catch (error) {
-
       if (error instanceof ConflictException) {
         throw error;
       }

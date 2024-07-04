@@ -19,7 +19,7 @@ export class EqualizationController {
         return this.equalizationService.create(createEqualizationDto);
     }
 
-    @Get()
+    @Get('/all')
     findAll() {
         return this.equalizationService.findAll();
     }
@@ -53,6 +53,16 @@ export class EqualizationController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.equalizationService.deleteEqualization(+id);
+    }
+
+    @Get()
+    getClosestCycleId() {
+        return this.equalizationService.findClosestCycleId();
+    }
+
+    @Get('/user/:userId')
+    getEqualizationsByUser(@Param('userId') userId: string) {
+        return this.equalizationService.findEqualizationIdByUserId(+userId);
     }
 
 }
