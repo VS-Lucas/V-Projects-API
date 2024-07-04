@@ -1,9 +1,8 @@
-import { Injectable, ConflictException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { UpdateEqualizationDto } from './dto/update-equalization.dto';
 import { SelfAssesmentService } from '../self-assesment/self-assesment.service';
-import { CreatedCycleEqualizationDto } from '../cycles-equalization/dto/created.cycleEqualization.dto';
 import { CyclesEqualizationService } from '../cycles-equalization/cycles-equalization.service';
 
 @Injectable()
@@ -46,7 +45,7 @@ export class EqualizationService {
         },
         cycleEqualization: {
           connect: {
-            id: createEqualizationDto.cycleId
+            id: createEqualizationDto.cycleEqualizationId
           }
         },
         date: new Date(),
@@ -272,7 +271,7 @@ export class EqualizationService {
                   id: updateEqualizationDto.cycleId
                 }
               },
-              date: new Date(updateEqualizationDto.date),
+              date: new Date(),
             },
         });
 
