@@ -1,14 +1,17 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { UpdateEqualizationDto } from './dto/update-equalization.dto';
 import { SelfAssesmentService } from '../self-assesment/self-assesment.service';
+import { CreatedCycleEqualizationDto } from '../cycles-equalization/dto/created.cycleEqualization.dto';
+import { CyclesEqualizationService } from '../cycles-equalization/cycles-equalization.service';
 
 @Injectable()
 export class EqualizationService {
   constructor(
     private prisma: PrismaService,
-    private readonly selfAssesmentService: SelfAssesmentService
+    private readonly selfAssesmentService: SelfAssesmentService,
+    private readonly cyclesEqualizationService: CyclesEqualizationService
   ) {}
 
   async create(createEqualizationDto: CreateEqualizationDto) {
@@ -135,7 +138,9 @@ export class EqualizationService {
     // return mappedEqualizations;
     return equalizations;
   
-}
+  }
+
+  
 
   async findOne(id: number){
     const equalization = await this.prisma.equalization.findUnique({
@@ -187,6 +192,44 @@ export class EqualizationService {
       return {
         criteriaScores,
       };
+  }
+
+  async findEqualizationIdByUserId(userId: number) {
+
+    try {
+      const currentCycle = await this.cyclesEqualizationService.getCurrentCycleId();
+      const selfAssessment = await this.prisma.selfAssessment.findFirst({
+        where: {
+          userId: userId,
+          cycleId: currentCycle
+        }
+      });
+
+      if (!selfAssessment) {
+        
+        console.log(`Self assessment for user ${userId} in cycle ${currentCycle} not found`);
+        return 0;
+      }
+
+      return selfAssessment.id;
+    } catch (error) {
+        throw new InternalServerErrorException('Something went wrong while finding the self-assessment');
+        
+    }
+  }
+
+  async findClosestCycleId() {
+    const lastCycle = await this.prisma.cycle.findFirst({
+      orderBy: {
+        endDate: 'desc',
+      },
+    });
+
+    if (!lastCycle) {
+      throw new ConflictException('No cycles found');
+    }
+
+    return lastCycle.id;
   }
 
   async findByEvaluator(evaluatorId: number) {

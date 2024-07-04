@@ -6,7 +6,7 @@ import { SelfAssesmentService } from '../self-assesment/self-assesment.service';
 import { CyclesModule } from '../cycles/cycles.module';
 
 @Module({
-  imports: [CyclesModule],
+  imports: [CyclesModule, CyclesEqualizationModule],
   controllers: [EqualizationController],
   providers: [EqualizationService, PrismaService, SelfAssesmentService,],
 

@@ -21,7 +21,7 @@ export class CyclesEqualizationController {
         }  
     }
   
-    @Get()
+    @Get('/all')
     async getAll() {
       try {
           return await this.cyclesEqualizationService.getAllCycleEqualizations();
@@ -37,6 +37,11 @@ export class CyclesEqualizationController {
         } catch (error) {
           throw new HttpException(error.message, HttpStatus.CONFLICT);
         }  
+    }
+
+    @Get()
+    async getCurrentCycleId() {
+      return this.cyclesEqualizationService.getCurrentCycleId();
     }
 }
 
