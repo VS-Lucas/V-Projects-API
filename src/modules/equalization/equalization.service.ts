@@ -197,22 +197,22 @@ export class EqualizationService {
 
     try {
       const currentCycle = await this.cyclesEqualizationService.getCurrentCycleId();
-      const selfAssessment = await this.prisma.selfAssessment.findFirst({
+      const equalization = await this.prisma.equalization.findFirst({
         where: {
-          userId: userId,
+          evaluatorId: userId,
           cycleId: currentCycle
         }
       });
 
-      if (!selfAssessment) {
+      if (!equalization) {
         
-        console.log(`Self assessment for user ${userId} in cycle ${currentCycle} not found`);
+        console.log(`Equalization for user ${userId} in cycle ${currentCycle} not found`);
         return 0;
       }
 
-      return selfAssessment.id;
+      return equalization.id;
     } catch (error) {
-        throw new InternalServerErrorException('Something went wrong while finding the self-assessment');
+        throw new InternalServerErrorException('Something went wrong while finding the Equalization');
         
     }
   }
