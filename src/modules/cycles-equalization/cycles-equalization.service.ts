@@ -136,16 +136,11 @@ export class CyclesEqualizationService {
               startDate: new Date(data.startDate),
               endDate: new Date(data.endDate),
               finalGrade: data.finalGrade,
+              status: data.status,
             },
           });
     
-          return {
-            id: cycle.id,
-            name: cycle.name,
-            startDate: cycle.startDate.toISOString(),
-            endDate: cycle.endDate.toISOString(),
-            finalGrade: cycle.finalGrade,
-          };
+          return cycle;
         } catch (error) {
     
           if (error instanceof ConflictException) {
@@ -153,5 +148,26 @@ export class CyclesEqualizationService {
           }
           throw new InternalServerErrorException('Something went wrong while updating the cycle');
         }
+      }
+
+      async getCurrentCycleId() {
+        const currentDate = new Date();
+    
+        const currentCycle = await this.prisma.cycleEqualization.findFirst({
+          where: {
+            startDate: {
+              lte: currentDate,
+            },
+            endDate: {
+              gte: currentDate,
+            },
+          },
+        });
+    
+        if (!currentCycle) {
+          throw new NotFoundException('No active cycle found');
+        }
+    
+        return currentCycle.id;
       }
 }
