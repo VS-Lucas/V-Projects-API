@@ -1,14 +1,16 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateEqualizationDto } from './dto/create-equalization.dto';
 import { UpdateEqualizationDto } from './dto/update-equalization.dto';
 import { SelfAssesmentService } from '../self-assesment/self-assesment.service';
+import { CyclesEqualizationService } from '../cycles-equalization/cycles-equalization.service';
 
 @Injectable()
 export class EqualizationService {
   constructor(
     private prisma: PrismaService,
-    private readonly selfAssesmentService: SelfAssesmentService
+    private readonly selfAssesmentService: SelfAssesmentService,
+    private readonly cyclesEqualizationService: CyclesEqualizationService
   ) {}
 
   async create(createEqualizationDto: CreateEqualizationDto) {
@@ -43,7 +45,7 @@ export class EqualizationService {
         },
         cycleEqualization: {
           connect: {
-            id: createEqualizationDto.cycleId
+            id: createEqualizationDto.cycleEqualizationId
           }
         },
         date: new Date(),
@@ -135,7 +137,9 @@ export class EqualizationService {
     // return mappedEqualizations;
     return equalizations;
   
-}
+  }
+
+  
 
   async findOne(id: number){
     const equalization = await this.prisma.equalization.findUnique({
@@ -189,6 +193,44 @@ export class EqualizationService {
       };
   }
 
+  async findEqualizationIdByUserId(userId: number) {
+
+    try {
+      const currentCycle = await this.cyclesEqualizationService.getCurrentCycleId();
+      const equalization = await this.prisma.equalization.findFirst({
+        where: {
+          evaluatorId: userId,
+          cycleId: currentCycle
+        }
+      });
+
+      if (!equalization) {
+        
+        console.log(`Equalization for user ${userId} in cycle ${currentCycle} not found`);
+        return 0;
+      }
+
+      return equalization.id;
+    } catch (error) {
+        throw new InternalServerErrorException('Something went wrong while finding the Equalization');
+        
+    }
+  }
+
+  async findClosestCycleId() {
+    const lastCycle = await this.prisma.cycle.findFirst({
+      orderBy: {
+        endDate: 'desc',
+      },
+    });
+
+    if (!lastCycle) {
+      throw new ConflictException('No cycles found');
+    }
+
+    return lastCycle.id;
+  }
+
   async findByEvaluator(evaluatorId: number) {
         return await this.prisma.equalization.findMany({
         where: { evaluatorId },
@@ -229,7 +271,7 @@ export class EqualizationService {
                   id: updateEqualizationDto.cycleId
                 }
               },
-              date: new Date(updateEqualizationDto.date),
+              date: new Date(),
             },
         });
 

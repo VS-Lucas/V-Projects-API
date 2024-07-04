@@ -71,16 +71,21 @@ export class PeerReviewService {
 
             const existingReview = await this.reviewExist(review.evaluatorId, review.evaluatedId, review.cycleId);
 
+            const isFinishedValue = this.isFinished(review)
+
+            // console.log(isFinishedValue)
+        
             if (!existingReview) {
-                await this.createPeerReview(review);
+                await this.createPeerReview(review, isFinishedValue);
+
             } else {
                 const peerReviewScoreId = existingReview.PeerReviewScores ? existingReview.PeerReviewScores.id : null;
-                await this.updatePeerReview(existingReview.id, peerReviewScoreId, review);
+                await this.updatePeerReview(existingReview.id, peerReviewScoreId, review, isFinishedValue);
             }
         }
     }
 
-    async createPeerReview(registerPeerReview: RegisterPeerReviewDto) {
+    async createPeerReview(registerPeerReview: RegisterPeerReviewDto, isFinished) {
         const evaluatorExists = await this.prisma.user.findUnique({
             where: { id: registerPeerReview.evaluatorId },
         });
@@ -123,6 +128,8 @@ export class PeerReviewService {
                     },
                 },
                 meanGrade: (registerPeerReview.assessment.behavior + registerPeerReview.assessment.tecniques) / 2,
+                isFinished: isFinished
+                
             },
         });
 
@@ -141,7 +148,7 @@ export class PeerReviewService {
         });
     }
 
-    async updatePeerReview(idPeerReview: number, idScore: number | null, registerPeerReview: RegisterPeerReviewDto) {
+    async updatePeerReview(idPeerReview: number, idScore: number | null, registerPeerReview: RegisterPeerReviewDto, isFinished) {
         const peerReviewExists = await this.prisma.peerReview.findUnique({
             where: { id: idPeerReview },
         });
@@ -156,6 +163,7 @@ export class PeerReviewService {
             },
             data: {
                 meanGrade: (registerPeerReview.assessment.behavior + registerPeerReview.assessment.tecniques) / 2,
+                isFinished: isFinished
             },
         });
 
@@ -252,5 +260,36 @@ export class PeerReviewService {
     
         return missingReviews;
     }
+
+    isFinished(review: RegisterPeerReviewDto){
+
+        if (review.assessment.behavior == null || review.assessment.tecniques == null || review.assessment.toImprove == "" ||
+            review.assessment.toPraise == "") {
+
+                return false; 
+
+            }else {
+
+                return true;
+
+            }
+        
+
+    };
+
+    async getPeerReviewsByEvaluatedId(idEvaluated, idCycle) {
+
+        const reviews = await this.prisma.peerReview.findMany({
+            where: {
+                evaluatedId: idEvaluated,
+                cycleId: idCycle,
+            },
+            include: {
+                PeerReviewScores: true,
+            },
+        });
+        return reviews;
+
+    };
     
 }

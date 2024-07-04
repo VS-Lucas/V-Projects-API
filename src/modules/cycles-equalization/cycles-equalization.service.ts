@@ -157,4 +157,25 @@ export class CyclesEqualizationService {
           throw new InternalServerErrorException('Something went wrong while updating the cycle');
         }
       }
+
+      async getCurrentCycleId() {
+        const currentDate = new Date();
+    
+        const currentCycle = await this.prisma.cycleEqualization.findFirst({
+          where: {
+            startDate: {
+              lte: currentDate,
+            },
+            endDate: {
+              gte: currentDate,
+            },
+          },
+        });
+    
+        if (!currentCycle) {
+          throw new NotFoundException('No active cycle found');
+        }
+    
+        return currentCycle.id;
+      }
 }

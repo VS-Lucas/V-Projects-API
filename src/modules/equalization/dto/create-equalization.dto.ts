@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsISO8601, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsNumber, ValidateNested } from 'class-validator';
 import { EqualizationScore } from './equalization-scores.dto';
 
 export class CreateEqualizationDto {
@@ -26,11 +26,6 @@ export class CreateEqualizationDto {
 
   @ApiProperty()
   status?: boolean;
-
-  @IsISO8601()
-  @IsNotEmpty()
-  @ApiProperty()
-  date: string;
 
   @ApiProperty({ type: [EqualizationScore] })
   @IsNotEmpty()

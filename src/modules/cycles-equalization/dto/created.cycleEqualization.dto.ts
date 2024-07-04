@@ -17,4 +17,7 @@ export class CreatedCycleEqualizationDto {
   @IsOptional()
   @ApiProperty()
   finalGrade?: number;
+
+  @ApiProperty()
+  status?: boolean;
 }

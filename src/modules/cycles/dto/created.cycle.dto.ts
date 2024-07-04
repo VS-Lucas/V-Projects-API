@@ -20,4 +20,7 @@ export class CreatedCycleDto {
   @IsOptional()
   @ApiProperty()
   finalGrade?: number;
+
+  @ApiProperty()
+  status?: boolean;
 }

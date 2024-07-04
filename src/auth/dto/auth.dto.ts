@@ -20,6 +20,15 @@ class UserDto {
     @ApiProperty()
     profilePhoto: string;
 
+    @ApiProperty()
+    phoneNumber: string;
+
+    @ApiProperty()
+    birthDate: Date;
+
+    @ApiProperty()
+    sector: string;
+
     @ApiProperty({ type: Address })
     address: Address;
 }
