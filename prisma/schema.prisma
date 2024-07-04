@@ -17,6 +17,9 @@ model User {
   address             Address?  @relation
   position            String?  
   profilePhoto        String
+  phoneNumber         String
+  birthDate           DateTime
+  sector              String
   SelfAssessments     SelfAssessment[]
   PeerReviewsGiven    PeerReview[] @relation("PeerReviewsGiven")
   PeerReviewsReceived PeerReview[] @relation("PeerReviewsReceived")
