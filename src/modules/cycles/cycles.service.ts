@@ -118,7 +118,8 @@ export class CyclesService {
       id: currentCycle.id,
       name: currentCycle.name,
       startDate: String(currentCycle.startDate),
-      endDate: String(currentCycle.endDate)
+      endDate: String(currentCycle.endDate),
+      scores: currentCycle.SelfAssessments
     };
   }
 

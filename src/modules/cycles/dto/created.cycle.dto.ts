@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
+import { UpdateSelfAssesmentDto } from 'src/modules/self-assesment/dto/update-self-assesment.dto';
 
 export class CreatedCycleDto {
   @ApiProperty()
@@ -23,4 +24,8 @@ export class CreatedCycleDto {
 
   @ApiProperty()
   status?: boolean;
+
+  @IsOptional()
+  @ApiProperty()
+  scores?: UpdateSelfAssesmentDto[];
 }
