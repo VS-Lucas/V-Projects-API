@@ -31,6 +31,11 @@ export class SelfAssesmentController {
     return this.selfAssesmentService.findOne(+id);
   }
 
+  @Get('/user/all/:userId')
+  findAllByUserId(@Param('userId') userId: string) {
+    return this.selfAssesmentService.findAllSelfAssessmentsByUserId(+userId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSelfAssesmentDto: UpdateSelfAssesmentDto) {
     return this.selfAssesmentService.update(+id, updateSelfAssesmentDto);
