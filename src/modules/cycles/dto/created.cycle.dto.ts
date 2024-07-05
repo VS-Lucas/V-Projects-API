@@ -5,12 +5,15 @@ export class CreatedCycleDto {
   @ApiProperty()
   id: number;
 
+  @IsOptional()
   @ApiProperty()
   name: string;
 
+  @IsOptional()
   @ApiProperty()
   startDate: string;
 
+  @IsOptional()
   @ApiProperty()
   endDate: string;
 

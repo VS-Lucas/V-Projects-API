@@ -9,4 +9,11 @@ export class CreatedUserDto {
 
     @ApiProperty()
     role: string;
+
+    @ApiProperty()
+    sector?:string
+
+    @ApiProperty()
+    position?:string
+
 }

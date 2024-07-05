@@ -49,7 +49,9 @@ export class UserService {
     return {
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      sector: user.sector,
+      position:user.position
     };
   }
 
@@ -63,7 +65,9 @@ export class UserService {
     return users.map(user => ({
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      sector: user.sector,
+      position:user.position
     }));
   }
 

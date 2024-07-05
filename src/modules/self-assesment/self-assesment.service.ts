@@ -91,6 +91,18 @@ export class SelfAssesmentService {
     return selfAssessment;
   }
 
+  async findAllSelfAssessmentsByUserId(userId: number) {
+    const selfAssessment = await this.prisma.selfAssessment.findMany({
+      where: { userId: userId },
+      include: {
+        user: true,
+        cycle: true,
+        SelfAssessmentScores: true
+      }
+    });
+    return selfAssessment;
+  }
+
   async update(id: number, updateSelfAssessmentDto: UpdateSelfAssesmentDto) {
     const existingSelfAssessment = await this.prisma.selfAssessment.findUnique({ where: { id } });
 
