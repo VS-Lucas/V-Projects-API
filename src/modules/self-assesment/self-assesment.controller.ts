@@ -3,13 +3,10 @@ import { SelfAssesmentService } from './self-assesment.service';
 import { CreateSelfAssesmentDto } from './dto/create-self-assesment.dto';
 import { UpdateSelfAssesmentDto } from './dto/update-self-assesment.dto';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/decorators/role.decorator';
 import { AuthenticationGuard } from 'src/guards/authentication.guard';
-import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
-@Role('COLABORADOR')
 @ApiBearerAuth()
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+@UseGuards(AuthenticationGuard)
 @Controller('api/self-assesment')
 @ApiTags('Self Assesment')
 export class SelfAssesmentController {
