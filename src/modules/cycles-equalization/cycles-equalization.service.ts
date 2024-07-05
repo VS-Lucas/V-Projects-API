@@ -93,7 +93,11 @@ export class CyclesEqualizationService {
         try {
             return await this.prisma.cycleEqualization.findMany({
                 include: {
-                  Equalizations: true
+                  Equalizations: {
+                    include: {
+                      evaluated: true,
+                    },
+                  }
                 },
               });
         } catch (error) {

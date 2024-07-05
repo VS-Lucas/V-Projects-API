@@ -104,6 +104,9 @@ export class CyclesService {
         endDate: {
           gte: currentDate
         }
+      },
+      include: {
+        SelfAssessments: true,
       }
     });
 
