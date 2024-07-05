@@ -65,4 +65,9 @@ export class EqualizationController {
         return this.equalizationService.findEqualizationIdByUserId(+userId);
     }
 
+    @Get(':userId/:evaluatedId')
+    getEqualizationByUserAndEvaluated(@Param('userId') userId: string, @Param('evaluatedId') evaluatedId: string) {
+        return this.equalizationService.findEqualizationByEvaluatorAndEvaluated(+userId, +evaluatedId);
+    }
+
 }
