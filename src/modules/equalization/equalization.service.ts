@@ -248,7 +248,7 @@ export class EqualizationService {
 
       if (!existingEqualization) {
         console.log(`Equalization for user ${evaluatedId} in cycle ${currentCycle} not found`);
-        throw new ConflictException('Equalization not found');
+        return 0;
       }
       return existingEqualization.status;
 
