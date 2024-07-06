@@ -32,6 +32,7 @@ export class UserService {
       name: user.name,
       email: user.email,
       role: user.role,
+      profilePhoto: user.profilePhoto
     };
   }
 
@@ -51,7 +52,8 @@ export class UserService {
       email: user.email,
       role: user.role,
       sector: user.sector,
-      position:user.position
+      position:user.position,
+      profilePhoto: user.profilePhoto
     };
   }
 
@@ -67,7 +69,8 @@ export class UserService {
       email: user.email,
       role: user.role,
       sector: user.sector,
-      position:user.position
+      position:user.position,
+      profilePhoto: user.profilePhoto
     }));
   }
 

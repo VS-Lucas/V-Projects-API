@@ -16,4 +16,6 @@ export class CreatedUserDto {
     @ApiProperty()
     position?:string
 
+    @ApiProperty()
+    profilePhoto:string
 }
